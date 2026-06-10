@@ -1673,7 +1673,10 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 			if ( '0' === (string) $entry_id ) {
 				// Delete all entries.
-				$delete_query = "DELETE p, pm FROM wp_posts p INNER JOIN wp_postmeta pm ON pm.post_id = p.ID WHERE p.post_type = 'wpcd_sent_emails' AND pm.meta_key = 'wpcd_sent_email_parent_id' AND pm.meta_value = '" . $parent_id . "'";
+				$delete_query = $wpdb->prepare(
+					"DELETE p, pm FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID WHERE p.post_type = 'wpcd_sent_emails' AND pm.meta_key = 'wpcd_sent_email_parent_id' AND pm.meta_value = %d",
+					(int) $parent_id
+				);
 
 				$deleted = $wpdb->query( $delete_query );
 			} else {

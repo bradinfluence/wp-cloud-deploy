@@ -2791,7 +2791,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 
 		check_ajax_referer( 'wpcd-server', 'nonce' );
 
-		$action = sanitize_text_field( $_REQUEST['_action'] );
+		$action = isset( $_POST['_action'] ) ? sanitize_text_field( wp_unslash( $_POST['_action'] ) ) : '';
 
 		$result = null;
 		$msg    = null;
@@ -2865,7 +2865,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 				}
 
 				// Get arguments from form.
-				$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( $_REQUEST['params'] ) ) );
+				$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : array() ) ) );
 
 				// Extract and sanitize some data from the args array.
 				$webserver = '';
@@ -2978,7 +2978,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 			/* Called when the installation of an app is about to start - after the user has pushed the install button */
 			case 'install-app':
 				// Verify that the user is allowed to add a site.
-				$server_id   = sanitize_text_field( $_REQUEST['id'] );
+				$server_id   = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 				$user_id     = get_current_user_id();
 				$post_author = get_post( $server_id )->post_author;
 				if ( ! wpcd_user_can( $user_id, 'add_app_wpapp', $server_id ) && $post_author != $user_id ) {
@@ -2987,13 +2987,13 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 				}
 
 				// Grab some data, so we can validate it...
-				$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( $_REQUEST['params'] ) ) );
+				$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : array() ) ) );
 
 				// Make sure that we get an unsanitized version of the array.
 				// We need this to get the password field.
 				// Text sanitation will remove certain special chars which are valid for password fields.
 				// So we cannot use the sanitized password field.
-				$args_unsanitized = wp_parse_args( wp_unslash( $_REQUEST['params'] ) );
+				$args_unsanitized = wp_parse_args( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : array() ) );
 
 				// Make sure we have data for all fields. Do not do a check for wp_locale though because, if it's blank, we'll default it 'en_US' later when the installation starts.
 				if ( empty( $args['wp_domain'] ) || empty( $args['wp_user'] ) || empty( $args_unsanitized['wp_password'] ) || empty( $args['wp_email'] ) || empty( $args['wp_version'] ) || empty( $args['wpcd_app_type'] ) ) {
@@ -3007,7 +3007,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 				if ( ! is_wp_error( $result ) ) {
 					$msg               = '<span class="wpcd_pre_install_text">' . __( 'Waiting for the installation to begin...<br />Do not exit this screen until you see a popup indicating that the installation is complete.', 'wpcd' ) . '</span>';
 					$msg              .= wpcd_get_loading_svg_code(); // add in the loading icon.
-					$result['post_id'] = sanitize_text_field( $_REQUEST['id'] );
+					$result['post_id'] = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 					$result['command'] = array( 'name' => $result['command'] );
 				}
 				break;
@@ -3181,9 +3181,9 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 
 		// Get WP data to process.
 		if ( empty( $args ) ) {
-			// data is coming in via $_REQUEST which means that the site is being provisioned via wp-admin or a UI.
-			$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( $_REQUEST['params'] ) ) );
-			$id   = sanitize_text_field( $_REQUEST['id'] );  // Post ID of the server where the wp app is being installed.
+			// data is coming in via $_POST which means that the site is being provisioned via wp-admin or a UI.
+			$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : array() ) ) );
+			$id   = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';  // Post ID of the server where the wp app is being installed.
 		} else {
 			// data is being passed in directly which means that the site is likely being provisioned by others such as via the WPCD woocommerce integration or the REST API or powertools bulk installs
 			$id = $args['id'];
@@ -4175,7 +4175,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 	 * servers add-on.
 	 */
 	public function create_instance() {
-		$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( $_REQUEST['params'] ) ) );
+		$args = array_map( 'sanitize_text_field', wp_parse_args( wp_unslash( isset( $_POST['params'] ) ? $_POST['params'] : array() ) ) );
 
 		$webserver = '';
 		if ( ! empty( $args['webserver-type'] ) ) {

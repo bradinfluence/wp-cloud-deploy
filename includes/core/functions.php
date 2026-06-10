@@ -265,7 +265,7 @@ function wpcd_get_long_running_command_timeout() {
  * need to be split into its own admin functions class.
  */
 function check_ajax_admin_nonce( $action = false ) {
-	$nonce  = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
+	$nonce  = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	$action = empty( $action ) ? 'wpcd-admin-nonce' : $action;
 
 	if ( ! wp_verify_nonce( $nonce, $action ) ) {
@@ -279,7 +279,7 @@ function check_ajax_admin_nonce( $action = false ) {
  * @param bool $action action.
  */
 function check_ajax_front_end_nonce( $action = false ) {
-	$nonce  = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
+	$nonce  = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	$action = empty( $action ) ? 'wpcd-frontend-nonce' : $action;
 
 	if ( ! wp_verify_nonce( $nonce, $action ) ) {

@@ -2457,7 +2457,7 @@ class WPCD_STABLEDIFF_APP extends WPCD_APP {
 		$signed_url64 = sanitize_text_field( wp_unslash( filter_input( INPUT_GET, 'awssignedurl64', FILTER_UNSAFE_RAW ) ) ); // The aws signed url encoded in base64 to avoid complications with ampersands.
 		if ( ! empty( $signed_url64 ) ) {
 
-			$signed_url = base64_decode( $signed_url64, true ); // decode the url.
+			$signed_url = esc_url_raw( base64_decode( $signed_url64, true ) ); // decode and validate the url.
 
 			// Get the folder name that we uploaded files into.
 			$aws_folder = sanitize_text_field( wp_unslash( filter_input( INPUT_GET, 'folder', FILTER_UNSAFE_RAW ) ) );
@@ -2467,7 +2467,7 @@ class WPCD_STABLEDIFF_APP extends WPCD_APP {
 
 			// What was the prompt used?
 			$ai_prompt_64 = sanitize_text_field( wp_unslash( filter_input( INPUT_GET, 'aiprompt64', FILTER_UNSAFE_RAW ) ) );
-			$ai_prompt    = base64_decode( $ai_prompt_64, true );
+			$ai_prompt    = sanitize_text_field( base64_decode( $ai_prompt_64, true ) );
 
 			// What seed was used?
 			$seed = filter_input( INPUT_GET, 'seed', FILTER_SANITIZE_NUMBER_INT );
