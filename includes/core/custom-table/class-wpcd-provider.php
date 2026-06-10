@@ -462,9 +462,9 @@ class WPCD_CT_Provider extends WPCD_MB_Custom_Table {
 		
 		if( !$this->verify_nonce( $this->action() ) ) {
 			$error = 'Error while saving provider data.';
-		} elseif( $this->action() == 'edit' && ( !$provider_id || !$this->user_can_edit( $provider_id ) ) ) {
+		} elseif ( 'edit' === $this->action() && ( ! $provider_id || ! $this->user_can_edit( $provider_id ) ) ) {
 			$error = 'You are not allowed to edit provider.';
-		} elseif($this->action() == 'add' && !$this->user_can_add() ) {
+		} elseif ( 'add' === $this->action() && ! $this->user_can_add() ) {
 			$error = 'You are not allowed to add provider.';
 		} elseif( empty( $name ) || !$name ) {
 			$error = "Name is required";

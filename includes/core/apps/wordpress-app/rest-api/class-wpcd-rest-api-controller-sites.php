@@ -259,7 +259,7 @@ class WPCD_REST_API_Controller_Sites extends WPCD_REST_API_Controller_Base {
 		$this->validate_required_parameters( $parameters, array( 'action' ) );
 
 		$app_name = WPCD_WORDPRESS_APP()->get_app_name();
-		$action   = $parameters['action'];
+		$action   = sanitize_key( $parameters['action'] );
 
 		// execute hook associated with the action.
 		$result = apply_filters( "wpcd_app_{$app_name}_tab_action", '', $action, $site_id );

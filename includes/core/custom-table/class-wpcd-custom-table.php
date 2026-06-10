@@ -813,7 +813,7 @@ abstract class WPCD_MB_Custom_Table {
 		ob_start();
 
 		$action = "wpcd_{$this->get_model_name()}_save_inline_{$type}";
-		$title = ( $type == 'edit' ) ? 'Edit' : 'Add' . ' ' . $this->model->labels['singular_name'];
+		$title = ( 'edit' === $type ) ? 'Edit' : 'Add ' . $this->model->labels['singular_name'];
 		
 		?>
 
@@ -823,7 +823,7 @@ abstract class WPCD_MB_Custom_Table {
 			<form method="post">
 				<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>" />
 				<?php
-				if( 'edit' == $type ) {
+				if ( 'edit' === $type ) {
 					printf( '<input type="hidden" name="model-id" value="%s" />', esc_attr( $model_id ) );
 				}
 				

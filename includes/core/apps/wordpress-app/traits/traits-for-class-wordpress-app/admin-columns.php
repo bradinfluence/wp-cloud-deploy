@@ -1533,7 +1533,7 @@ trait wpcd_wpapp_admin_column_data {
 				}
 
 				if ( isset( $server_malware_items['reporting_time'] ) ) {
-					$return .= '<br />' . __( 'As of: ', 'wpcd' ) . date( 'Y-m-d', $server_malware_items['reporting_time'] );
+					$return .= '<br />' . __( 'As of: ', 'wpcd' ) . gmdate( 'Y-m-d', (int) $server_malware_items['reporting_time'] );
 				}
 
 				$class = 'wpcd_malware_found_wrap';

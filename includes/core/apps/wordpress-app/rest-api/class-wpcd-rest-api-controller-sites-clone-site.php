@@ -176,7 +176,7 @@ class WPCD_REST_API_Controller_Sites_Clone_Site extends WPCD_REST_API_Controller
 		$command_array = explode( '---', $name );
 
 		// Check to see if the command is to clone a site otherwise exit.
-		if ( 'clone-site' == $command_array[0] ) {
+		if ( 'clone-site' === $command_array[0] ) {
 
 			// Lets pull the logs.
 			$logs = WPCD_WORDPRESS_APP()->get_app_command_logs( $old_site_id, $name );

@@ -135,7 +135,7 @@ class WPCD_CT_DNS_Zone_Record extends WPCD_MB_Custom_Table {
 		}
 		
 		if( !$error ) {
-			if( $view_type == 'public' ) {
+			if ( 'public' === $view_type ) {
 				$items = $this->display_public_child_items_table( $zone );
 			} else {
 				$items = $this->display_child_items_table( $zone );
@@ -320,7 +320,7 @@ class WPCD_CT_DNS_Zone_Record extends WPCD_MB_Custom_Table {
 		$has_access = false;
 		$message = '';
 		
-		if( $action == 'edit' || $action == 'delete' ) {
+		if ( 'edit' === $action || 'delete' === $action ) {
 			$item = $this->api->get_by_id( $zone_record_id );
 			if( $item ) {
 				$zone_id = $item->parent_id;
