@@ -1161,11 +1161,14 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 
 				$parents = get_posts(
 					array(
-						'posts_per_page' => -1,
-						'post_type'      => 'wpcd_app_server',
-						'post_status'    => 'private',
-						'fields'         => 'ids', // Just get IDs, not objects.
-						'author'         => $wpcd_server_owner,
+						'posts_per_page'         => -1,
+						'post_type'              => 'wpcd_app_server',
+						'post_status'            => 'private',
+						'fields'                 => 'ids',
+						'author'                 => $wpcd_server_owner,
+						'no_found_rows'          => true,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
 					)
 				);
 
@@ -1871,10 +1874,13 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 		}
 
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'any',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$app_ids = get_posts( $args );

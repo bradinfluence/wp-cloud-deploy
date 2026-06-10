@@ -548,6 +548,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_key',
@@ -583,6 +585,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_state',
@@ -619,6 +623,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'posts_per_page' => -1,
 			'orderby'        => $orderby,
 			'order'          => $order,
+			'no_found_rows'         => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'parent_post_id',
@@ -699,17 +705,17 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 
 		// Add messages to message field.
 		if ( ! empty( $task_message ) ) {
-			if ( empty( get_post_meta( $id, 'pending_task_messages', true ) ) ) {
+			$current_messages = get_post_meta( $id, 'pending_task_messages', true );
+			if ( empty( $current_messages ) ) {
 				update_post_meta( $id, 'pending_task_messages', $task_message );
 			} else {
-				$old_message  = get_post_meta( $id, 'pending_task_messages', true );
-				$new_message .= '<br />' . $task_message;
-				update_post_meta( $id, 'pending_task_messages', $new_message );
+				update_post_meta( $id, 'pending_task_messages', $current_messages . '<br />' . $task_message );
 			}
 		}
 
 		// Increment the attempted count.
-		update_post_meta( $id, 'pending_task_attempts', ( ( (int) get_post_meta( $id, 'pending_task_attempts', true ) ) + 1 ) );
+		$current_attempts = (int) get_post_meta( $id, 'pending_task_attempts', true );
+		update_post_meta( $id, 'pending_task_attempts', $current_attempts + 1 );
 
 	}
 
@@ -779,6 +785,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_associated_server_id',
@@ -814,6 +822,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'posts_per_page' => -1,
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
+			'no_found_rows'         => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_state',
@@ -1213,6 +1223,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 				'post_type'      => 'wpcd_pending_log',
 				'post_status'    => 'private',
 				'posts_per_page' => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 				'fields'         => 'ids', // Only get post IDs.
 				'meta_query'     => array(
 					'relation' => 'AND',
@@ -1239,6 +1251,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 				'post_type'      => 'wpcd_pending_log',
 				'post_status'    => 'private',
 				'posts_per_page' => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 				'fields'         => 'ids', // Only get post IDs.
 				'meta_query'     => array(
 					'relation' => 'AND',
