@@ -374,12 +374,15 @@ class WPCD_POSTS_Quota_Limits extends WPCD_Posts_Base {
 	public function wpcd_after_remove_site_action_before_record_delete( $app_id, $action ) {
 
 		$args = array(
-			'post_type'      => 'wpcd_quota_limits',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_quota_limits',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'orderby'                => 'ID',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'parent_id',
 					'value'   => $app_id,
@@ -469,12 +472,14 @@ class WPCD_POSTS_Quota_Limits extends WPCD_Posts_Base {
 
 		// Get limits that apply to the site.
 		$args = array(
-			'post_type'      => 'wpcd_quota_limits',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_quota_limits',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'orderby'                => 'ID',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'parent_id',
 					'value'   => $app_id,

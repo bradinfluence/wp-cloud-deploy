@@ -41,9 +41,11 @@ class WPCD_REST_API_Controller_Tasks extends WPCD_REST_API_Controller_Base {
 	public function list_tasks(): array {
 		$tasks = get_posts(
 			array(
-				'post_type'      => 'wpcd_pending_log',
-				'post_status'    => 'private',
-				'posts_per_page' => -1,
+				'post_type'              => 'wpcd_pending_log',
+				'post_status'            => 'private',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			),
 		);
 		return array_map( array( $this, 'get_task_data' ), $tasks );

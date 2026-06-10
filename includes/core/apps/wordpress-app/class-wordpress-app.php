@@ -908,10 +908,14 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'posts_per_page'         => 1,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'key'   => 'parent_post_id',
 						'value' => $server_id,
@@ -925,7 +929,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 		);
 
 		if ( $posts ) {
-			return $posts[0]->ID;
+			return $posts[0];
 		} else {
 			return false;
 		}
@@ -946,10 +950,12 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'key'   => 'wpapp_domain',
 						'value' => $domain,
@@ -3776,8 +3782,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 		$php_pm_max_children = get_post_meta( $site_package_id, 'wpcd_php_pm_max_children', true );
 		if ( ! empty( $php_pm_max_children ) ) {
 			// get rest of php worker values.
-			$php_pm                   = get_post_meta( $site_package_id, 'wpcd_php_pm', true );
-			$php_pm_max_children      = get_post_meta( $site_package_id, 'wpcd_php_pm_max_children', true );
+			$php_pm = get_post_meta( $site_package_id, 'wpcd_php_pm', true );
 			$php_pm_start_servers     = get_post_meta( $site_package_id, 'wpcd_php_pm_start_servers', true );
 			$php_pm_min_spare_servers = get_post_meta( $site_package_id, 'wpcd_php_pm_min_spare_servers', true );
 			$php_pm_max_spare_servers = get_post_meta( $site_package_id, 'wpcd_php_pm_max_spare_servers', true );
