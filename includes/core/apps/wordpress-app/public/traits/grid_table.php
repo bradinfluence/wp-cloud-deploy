@@ -33,7 +33,7 @@ trait wpcd_grid_table {
 		$max_width = 999999;
 
 		?>
-			<div class="wpcd-list-table wpcd-grid-table <?php echo implode( ' ', $this->get_table_classes() ); ?> table-hidden" data-max-width="<?php echo $max_width; ?>">
+			<div class="wpcd-list-table wpcd-grid-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?> table-hidden" data-max-width="<?php echo absint( $max_width ); ?>">
 
 				<div class="wpcd-grid-table-loader"></div>
 
@@ -288,7 +288,7 @@ trait wpcd_grid_table {
 		<style>
 
 			.wpcd-grid-table-columns, .wpcd-grid-table-rows .wpcd-grid-table-row {
-					grid-template-columns : <?php echo $template_columns; ?>
+					grid-template-columns : <?php echo esc_html( $template_columns ); ?>
 			}	
 		</style>
 

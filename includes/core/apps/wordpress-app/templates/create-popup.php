@@ -157,7 +157,7 @@
 							<?php
 							foreach ( $dir_list as $dir_name ) {
 								?>
-								<option value="<?php echo $dir_name; ?>" <?php selected( $scripts_version, $dir_name, true ); ?>><?php echo esc_html( $dir_name ); ?></option>
+								<option value="<?php echo esc_attr( $dir_name ); ?>" <?php selected( $scripts_version, $dir_name, true ); ?>><?php echo esc_html( $dir_name ); ?></option>
 								<?php
 							}
 							?>

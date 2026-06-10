@@ -2749,7 +2749,7 @@ class WPCD_WORDPRESS_APP extends WPCD_APP {
 		if ( ! current_user_can( 'wpcd_provision_servers' ) ) {
 			$invalid_msg = __( 'You don\'t have access to provision a server. Perhaps you\'re not logged in?', 'wpcd' );
 			if ( $view == 'public' ) {
-				echo $invalid_msg;
+				echo esc_html( $invalid_msg );
 			} else {
 				echo wp_send_json_error( array( 'msg' => $invalid_msg ) );
 			}

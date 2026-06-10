@@ -104,7 +104,7 @@ class WPCD_CT_Public_Loader extends Loader {
 			}
 
 		} else {
-			echo $permission['message'];
+			echo esc_html( $permission['message'] );
 		}
 		
 		$content = ob_get_clean();

@@ -34,7 +34,7 @@ $message = rwmb_request()->get( 'model-message' );
 		
 		?>
 			
-		<input type="hidden" name="nonce" value="<?php echo $this->get_nonce( $action ); ?>" />
+		<input type="hidden" name="nonce" value="<?php echo esc_attr( $this->get_nonce( $action ) ); ?>" />
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-2" class="postbox-container">

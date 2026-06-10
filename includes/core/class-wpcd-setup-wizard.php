@@ -258,7 +258,7 @@ class WPCD_Admin_Setup_Wizard {
 					$step_class = '';
 				}
 				?>
-				<li class="<?php echo $step_class; ?>"><div class="hint">
+				<li class="<?php echo esc_attr( $step_class ); ?>"><div class="hint">
 					<?php echo esc_html( $step['name'] ); ?>
 				</div></li>
 			<?php endforeach; ?>
@@ -397,7 +397,7 @@ class WPCD_Admin_Setup_Wizard {
 			<select style="min-width: 200px;" type="text" name="selected-provider">
 			<?php
 			foreach ( $providers as $provider => $name ) {
-				echo '<option value="' . $provider . '">' . $name . '</option>';
+				echo '<option value="' . esc_attr( $provider ) . '">' . esc_html( $name ) . '</option>';
 			}
 			?>
 			</select>
