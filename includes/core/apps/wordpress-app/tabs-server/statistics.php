@@ -419,7 +419,7 @@ class WPCD_WORDPRESS_TABS_SERVER_STATISTICS extends WPCD_WORDPRESS_TABS {
 		update_post_meta( $id, 'wpcd_wpapp_top_data', '<pre>' . $result . '<pre/>' );
 
 		// Finally, record the date that we got these stats!
-		update_post_meta( $id, 'wpcd_wpapp_server_stats_list_date', date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) );
+		update_post_meta( $id, 'wpcd_wpapp_server_stats_list_date', gmdate( 'Y-m-d H:i:s' ) );
 
 		// Return the data as an error so it can be shown in a dialog box.
 		return new \WP_Error( __( 'Server statistics have been collected. This page will now refresh.  Navigate back to this tab to see the new data!', 'wpcd' ) );

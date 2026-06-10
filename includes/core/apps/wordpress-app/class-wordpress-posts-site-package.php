@@ -652,9 +652,11 @@ class WPCD_POSTS_Site_Package extends WPCD_Posts_Base {
 		// Get list of product packages into an array to prepare it for display.
 		$wpcd_site_packages     = get_posts(
 			array(
-				'post_type'   => 'wpcd_site_package',
-				'post_status' => 'publish',
-				'numberposts' => -1,
+				'post_type'              => 'wpcd_site_package',
+				'post_status'            => 'publish',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 		$wpcd_site_package_list = array( 0 => __( 'None', 'wpcd' ) );

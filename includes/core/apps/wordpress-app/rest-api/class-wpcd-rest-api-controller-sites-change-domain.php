@@ -177,7 +177,7 @@ class WPCD_REST_API_Controller_Sites_Change_Domain extends WPCD_REST_API_Control
 		$command_array = explode( '---', $name );
 
 		// Check to see if the command is to replace a domain otherwise exit.
-		if ( 'replace_domain' == $command_array[0] ) {
+		if ( 'replace_domain' === $command_array[0] ) {
 
 			// Lets pull the logs.
 			$logs = WPCD_WORDPRESS_APP()->get_app_command_logs( $id, $name );

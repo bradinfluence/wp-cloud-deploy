@@ -77,24 +77,24 @@ class WPCD_SYNC {
 			$saved_sync_set_cron       = wpcd_get_option( 'wpcd_sync_set_cron' );
 			$saved_export_all_settings = wpcd_get_option( 'wpcd_export_all_settings' );
 			$output_matched            = 1;
-			if ( $wpcd_sync_target_site != $saved_sync_target_site ||
-				$wpcd_sync_enc_key != $saved_sync_enc_key ||
-				$wpcd_sync_user_id != $saved_sync_user_id ||
-				$wpcd_sync_password != $saved_sync_password ||
-				$wpcd_sync_auto_export != $saved_sync_auto_export ||
-				$wpcd_sync_set_cron != $saved_sync_set_cron ||
-				$wpcd_export_all_settings != $saved_export_all_settings
+			if ( $wpcd_sync_target_site !== $saved_sync_target_site ||
+				$wpcd_sync_enc_key !== $saved_sync_enc_key ||
+				$wpcd_sync_user_id !== $saved_sync_user_id ||
+				$wpcd_sync_password !== $saved_sync_password ||
+				$wpcd_sync_auto_export !== $saved_sync_auto_export ||
+				$wpcd_sync_set_cron !== $saved_sync_set_cron ||
+				$wpcd_export_all_settings !== $saved_export_all_settings
 			) {
 				$output_matched = 0;
 			}
 
-			if ( ! empty( $wpcd_export_all_settings ) && $wpcd_export_all_settings == 1 ) {
+			if ( ! empty( $wpcd_export_all_settings ) && 1 === (int) $wpcd_export_all_settings ) {
 				$wpcd_export_all_settings = 1;
 			} else {
 				$wpcd_export_all_settings = 0;
 			}
 
-			if ( ! empty( $saved_export_all_settings ) && $saved_export_all_settings == 1 ) {
+			if ( ! empty( $saved_export_all_settings ) && 1 === (int) $saved_export_all_settings ) {
 				$saved_export_all_settings = 1;
 			} else {
 				$saved_export_all_settings = 0;
@@ -115,17 +115,17 @@ class WPCD_SYNC {
 			$old_schedule_args = array( $saved_sync_target_site, $saved_sync_enc_key, $saved_sync_user_id, $saved_sync_password, $saved_export_all_settings, $ajax );
 
 			// remove cron if auto export disable.
-			if ( $wpcd_sync_auto_export == 0 || empty( $wpcd_sync_auto_export ) ) {
+			if ( 0 === (int) $wpcd_sync_auto_export || empty( $wpcd_sync_auto_export ) ) {
 				wp_unschedule_hook( 'wpcd_export_data_actions' );
 				wp_clear_scheduled_hook( 'wpcd_export_data_actions', $old_schedule_args );
 				wp_clear_scheduled_hook( 'wpcd_export_data_actions', $schedule_args );
 			}
 
 			// set cron if export settings changed.
-			if ( $output_matched == 0 ) {
+			if ( 0 === (int) $output_matched ) {
 				wp_unschedule_hook( 'wpcd_export_data_actions' );
 				wp_clear_scheduled_hook( 'wpcd_export_data_actions', $old_schedule_args );
-				if ( $wpcd_sync_auto_export == 1 ) {
+				if ( 1 === (int) $wpcd_sync_auto_export ) {
 					if ( isset( $wpcd_sync_set_cron ) && ! empty( $wpcd_sync_set_cron ) ) {
 						wp_schedule_event( time(), $wpcd_sync_set_cron, 'wpcd_export_data_actions', $schedule_args );
 					}
@@ -160,10 +160,10 @@ class WPCD_SYNC {
 
 		// Check before deleting if file exists.
 		$table_name    = $wpdb->prefix . 'wpcd_restore_files';
-		$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE restore_id = %d AND file_name = %d", array( $restore_id, $file_name ) );
+		$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE restore_id = %d AND file_name = %s", array( (int) $restore_id, $file_name ) );
 		$files_results = $wpdb->get_results( $get_files_sql );
 
-		if ( count( $files_results ) != 0 ) {
+		if ( 0 !== count( $files_results ) ) {
 
 			$delete_result = $wpdb->delete( $table_name, array( 'restore_id' => $restore_id ) );
 
@@ -213,10 +213,10 @@ class WPCD_SYNC {
 
 		// Check before restoring if file exists.
 		$table_name    = $wpdb->prefix . 'wpcd_restore_files';
-		$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE restore_id = %d AND file_name = %d", array( $restore_id, $file_name ) );
+		$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE restore_id = %d AND file_name = %s", array( (int) $restore_id, $file_name ) );
 		$files_results = $wpdb->get_results( $get_files_sql );
 
-		if ( count( $files_results ) != 0 ) {
+		if ( 0 !== count( $files_results ) ) {
 
 			$encrypted_json_data = $files_results[0]->file_data;
 			$decrypted_json_data = WPCD()->decrypt( $encrypted_json_data, $key );
@@ -559,7 +559,7 @@ class WPCD_SYNC {
 								}
 							}
 
-							if ( 'parent_post_id' == $key ) {
+							if ( 'parent_post_id' === $key ) {
 								$value = $parent_post_ids[ $value ];
 							}
 
@@ -584,7 +584,7 @@ class WPCD_SYNC {
 				// Check if export/import settings is enabled or not.
 				if ( isset( $settings_to_be_imported['wpcd_export_all_settings'] ) ) {
 					$wpcd_export_all_settings_enable = $settings_to_be_imported['wpcd_export_all_settings'];
-					if ( ! empty( $wpcd_export_all_settings_enable ) && $wpcd_export_all_settings_enable == 1 ) {
+					if ( ! empty( $wpcd_export_all_settings_enable ) && 1 === (int) $wpcd_export_all_settings_enable ) {
 
 						// Don't update the sync tab settings.
 						$settings_to_be_imported['wpcd_sync_target_site']    = wpcd_get_option( 'wpcd_sync_target_site' );
@@ -723,7 +723,7 @@ class WPCD_SYNC {
 		$wpcd_export_all_settings = wpcd_get_option( 'wpcd_export_all_settings' );
 		$ajax                     = 0;
 
-		if ( ! empty( $wpcd_export_all_settings ) && $wpcd_export_all_settings == 1 ) {
+		if ( ! empty( $wpcd_export_all_settings ) && 1 === (int) $wpcd_export_all_settings ) {
 			$wpcd_export_all_settings = 1;
 		} else {
 			$wpcd_export_all_settings = 0;
@@ -824,9 +824,11 @@ class WPCD_SYNC {
 
 		// Get SERVER and APP posts.
 		$args = array(
-			'post_type'   => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status' => 'private',
-			'numberposts' => -1,
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		);
 
 		$posts = get_posts( $args );
@@ -910,9 +912,11 @@ class WPCD_SYNC {
 			// Get the team data.
 			$teams = get_posts(
 				array(
-					'post_type'   => 'wpcd_team',
-					'post_status' => 'private',
-					'numberposts' => -1,
+					'post_type'              => 'wpcd_team',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -985,7 +989,7 @@ class WPCD_SYNC {
 
 			// Get all the Settings fields.
 
-			if ( ! empty( $wpcd_export_all_settings ) && $wpcd_export_all_settings == 1 ) {
+			if ( ! empty( $wpcd_export_all_settings ) && 1 === (int) $wpcd_export_all_settings ) {
 				$settings                             = get_option( 'wpcd_settings' );
 				$settings['wpcd_export_all_settings'] = 1;
 				$raw_data['wpcd_settings']            = $settings;
@@ -1036,8 +1040,8 @@ class WPCD_SYNC {
 			$response_arr = json_decode( $response, true );
 
 			// if data not store at the target site.
-			if ( $response_arr['status'] == false ) {
-				if ( $ajax == 0 ) {
+			if ( false === $response_arr['status'] ) {
+				if ( 0 === (int) $ajax ) {
 					do_action( 'wpcd_log_error', $response_arr['message'], 'debug', __FILE__, __LINE__ );
 				} else {
 					do_action( 'wpcd_log_error', $response_arr['message'], 'debug', __FILE__, __LINE__ );
@@ -1047,13 +1051,13 @@ class WPCD_SYNC {
 				}
 			}
 
-			if ( $ajax == 1 ) {
+			if ( 1 === (int) $ajax ) {
 				$success_msg = array( 'msg' => __( 'SERVER and APP post data have been exported and is stored in a JSON file on the destination site.', 'wpcd' ) );
 				wp_send_json_success( $success_msg );
 				wp_die();
 			}
 		} else {
-			if ( $ajax == 0 ) {
+			if ( 0 === (int) $ajax ) {
 				do_action( 'wpcd_log_error', 'No posts found for SERVER and APP.', 'debug', __FILE__, __LINE__ );
 			} else {
 				do_action( 'wpcd_log_error', 'No posts found for SERVER and APP.', 'debug', __FILE__, __LINE__ );

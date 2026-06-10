@@ -104,10 +104,12 @@ class WPCD_WORDPRESS_TABS_SITE_SYNC extends WPCD_WORDPRESS_TABS {
 
 						/* Start: Check if one or more post records for the same domain exists on the target server - if so then delete them. */
 						$delete_args = array(
-							'post_type'   => 'wpcd_app',
-							'post_status' => 'private',
-							'numberposts' => 999,
-							'meta_query'  => array(
+							'post_type'              => 'wpcd_app',
+							'post_status'            => 'private',
+							'numberposts'            => 999,
+							'no_found_rows'          => true,
+							'update_post_term_cache' => false,
+							'meta_query'             => array(
 								array(
 									'key'     => 'wpapp_domain',
 									'value'   => $domain,
@@ -1002,6 +1004,7 @@ class WPCD_WORDPRESS_TABS_SITE_SYNC extends WPCD_WORDPRESS_TABS {
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 				'post__in'       => empty( $post__in ) ? array( -1 ) : $post__in,
+				'no_found_rows'  => true,
 			),
 			'attributes'  => array(
 				// the key of the field (the key goes in the request).

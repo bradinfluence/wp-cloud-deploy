@@ -41,9 +41,11 @@ class WPCD_REST_API_Controller_Tasks extends WPCD_REST_API_Controller_Base {
 	public function list_tasks(): array {
 		$tasks = get_posts(
 			array(
-				'post_type'      => 'wpcd_pending_log',
-				'post_status'    => 'private',
-				'posts_per_page' => -1,
+				'post_type'              => 'wpcd_pending_log',
+				'post_status'            => 'private',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			),
 		);
 		return array_map( array( $this, 'get_task_data' ), $tasks );
@@ -89,7 +91,8 @@ class WPCD_REST_API_Controller_Tasks extends WPCD_REST_API_Controller_Base {
 	 * @return array
 	 */
 	protected function get_task_data( WP_Post $task ): array {
-		$display_complete_date = get_post_meta( $task->ID, 'pending_task_complete_date', true );
+		$unix_start_date    = (int) get_post_meta( $task->ID, 'pending_task_start_date', true );
+		$unix_complete_date = (int) get_post_meta( $task->ID, 'pending_task_complete_date', true );
 		return array(
 			'id'                    => $task->ID,
 			'name'                  => $task->post_title,
@@ -102,10 +105,10 @@ class WPCD_REST_API_Controller_Tasks extends WPCD_REST_API_Controller_Base {
 			'user_id'               => (int) $task->post_author,
 			'parent_id'             => (int) get_post_meta( $task->ID, 'parent_post_id', true ),
 			'parent_type'           => get_post_meta( $task->ID, 'pending_task_parent_post_type', true ),
-			'display_start_date'    => date( 'Y-m-d @ H:i', get_post_meta( $task->ID, 'pending_task_start_date', true ) ),
-			'display_complete_date' => empty( $display_complete_date ) ? null : date( 'Y-m-d @ H:i', get_post_meta( $task->ID, 'pending_task_complete_date', true ) ),
-			'unix_start_date'       => get_post_meta( $task->ID, 'pending_task_start_date', true ),
-			'unix_complete_date'    => get_post_meta( $task->ID, 'pending_task_complete_date', true ),
+			'display_start_date'    => $unix_start_date ? gmdate( 'Y-m-d @ H:i', $unix_start_date ) : null,
+			'display_complete_date' => $unix_complete_date ? gmdate( 'Y-m-d @ H:i', $unix_complete_date ) : null,
+			'unix_start_date'       => $unix_start_date,
+			'unix_complete_date'    => $unix_complete_date,
 		);
 	}
 

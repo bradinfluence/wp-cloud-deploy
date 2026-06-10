@@ -610,10 +610,10 @@ abstract class WPCD_MB_Custom_Table {
 				
 				printf(
 					'<a href="#" data-id="%d" data-model="%s" data-nonce="%s" data-view="%s" id="wpcd-mbct-delete">' . esc_html__( 'Delete', 'mb-custom-table' ) . '</a>',
-					rwmb_request()->get('model-id'),
-					$this->model->name,
-					$this->get_nonce('delete'),
-					$this->get_view()
+					absint( rwmb_request()->get( 'model-id' ) ),
+					esc_attr( $this->model->name ),
+					esc_attr( $this->get_nonce( 'delete' ) ),
+					esc_attr( $this->get_view() )
 				);
 				
 			}
@@ -753,8 +753,12 @@ abstract class WPCD_MB_Custom_Table {
 	 * @return string
 	 */
 	function default_permission_error( $action ) {
-		$default_error = sprintf( 'You are not allowed to %s %s.', $action, $this->get_model_display_name() );
-		return $default_error;
+		return sprintf(
+			/* translators: 1: action name e.g. edit/delete 2: model display name */
+			__( 'You are not allowed to %1$s %2$s.', 'wpcd' ),
+			sanitize_text_field( $action ),
+			$this->get_model_display_name()
+		);
 	}
 	
 	/**
@@ -764,9 +768,9 @@ abstract class WPCD_MB_Custom_Table {
 	 */
 	public function print_error_window( $message ) {
 		?>
-		<div id="mb_ct_<?php echo $this->get_model_name();?>_edit_form" class="wpcd_mb_inline_edit_form_window">
-			<?php printf('<h3>Error</h3>' ); ?>
-			<div><?php echo $message; ?></div>
+		<div id="mb_ct_<?php echo esc_attr( $this->get_model_name() ); ?>_edit_form" class="wpcd_mb_inline_edit_form_window">
+			<h3><?php esc_html_e( 'Error', 'wpcd' ); ?></h3>
+			<div><?php echo esc_html( $message ); ?></div>
 			
 			<div class="rwmb-field rwmb-buttons-wrapper wpcd_ct_buttons_row">
 				<div class="rwmb-label">
@@ -809,17 +813,17 @@ abstract class WPCD_MB_Custom_Table {
 		ob_start();
 
 		$action = "wpcd_{$this->get_model_name()}_save_inline_{$type}";
-		$title = ( $type == 'edit' ) ? 'Edit' : 'Add' . ' ' . $this->model->labels['singular_name'];
+		$title = ( 'edit' === $type ) ? 'Edit' : 'Add ' . $this->model->labels['singular_name'];
 		
 		?>
 
-		<div id="mb_ct_<?php echo $this->get_model_name(); ?>_edit_form" class="wpcd_mb_inline_edit_form_window">
-			<?php printf('<h3>%s</h3>', $title ); ?>
+		<div id="mb_ct_<?php echo esc_attr( $this->get_model_name() ); ?>_edit_form" class="wpcd_mb_inline_edit_form_window">
+			<h3><?php echo esc_html( $title ); ?></h3>
 
 			<form method="post">
-				<input type="hidden" name="action" value="<?php echo $action; ?>" />
+				<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>" />
 				<?php
-				if( 'edit' == $type ) {
+				if ( 'edit' === $type ) {
 					printf( '<input type="hidden" name="model-id" value="%s" />', esc_attr( $model_id ) );
 				}
 				

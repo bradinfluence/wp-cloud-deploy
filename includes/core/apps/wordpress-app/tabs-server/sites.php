@@ -167,11 +167,14 @@ class WPCD_WORDPRESS_TABS_SITES extends WPCD_WORDPRESS_TABS {
 		);
 
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => 9999,
-			'fields'         => 'ids',
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => 9999,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'   => 'parent_post_id',
 					'value' => $id,
@@ -182,6 +185,7 @@ class WPCD_WORDPRESS_TABS_SITES extends WPCD_WORDPRESS_TABS {
 		$app_ids = get_posts( $args );
 
 		if ( ! empty( $app_ids ) ) {
+			_prime_post_caches( $app_ids, false, false );
 			foreach ( $app_ids as $app_id ) {
 
 				if ( wpcd_is_admin() || wpcd_user_can( get_current_user_id(), 'view_app', $app_id ) || get_post_field( 'post_author', $app_id ) == get_current_user_id() ) {

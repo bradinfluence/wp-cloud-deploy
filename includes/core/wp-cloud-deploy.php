@@ -855,7 +855,7 @@ class WP_CLOUD_DEPLOY {
 			// ok, we don't have a key at all anywhere.
 			// so generate one and add it to wp options.
 			$len = openssl_cipher_iv_length( $cipher = 'AES-128-CBC' );
-			$key = $key = wpcd_random_str( $len );  // Do NOT use openssl_random_pseudo_bytes($len) since WordPress is not retrieving this value from options properly! We store it but WP retrieves blank so do not use it.
+			$key = wpcd_random_str( $len );  // Do NOT use openssl_random_pseudo_bytes($len) since WordPress is not retrieving this value from options properly! We store it but WP retrieves blank so do not use it.
 			update_option( 'wpcd_encryption_key_v2', $key );
 		}
 
@@ -1152,10 +1152,12 @@ class WP_CLOUD_DEPLOY {
 	public function setup_virtual_cloud_provider( $provider, $provider_paths ) {
 
 		$args = array(
-			'post_type'      => 'wpcd_cloud_provider',
-			'posts_per_page' => -1,
-			'meta_key'       => 'wpcd_cloud_provider_slug',
-			'meta_value'     => $provider,
+			'post_type'              => 'wpcd_cloud_provider',
+			'posts_per_page'         => 1,
+			'meta_key'               => 'wpcd_cloud_provider_slug',
+			'meta_value'             => $provider,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		);
 
 		$post = get_posts( $args );

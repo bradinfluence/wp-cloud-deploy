@@ -150,7 +150,7 @@ class WPCD_CT_Admin extends \MetaBox\CustomTable\Model\Admin {
 		if( $permission['has_access'] ) {
 			include MBCT_DIR . "/views/$view.php";
 		} else {
-			echo $permission['message'];
+			echo esc_html( $permission['message'] );
 		}
 	}
 	

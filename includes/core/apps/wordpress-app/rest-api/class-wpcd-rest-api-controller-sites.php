@@ -69,10 +69,12 @@ class WPCD_REST_API_Controller_Sites extends WPCD_REST_API_Controller_Base {
 	public function list_sites( WP_REST_Request $request ): array {
 		// base query.
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'   => 'app_type',
 					'value' => WPCD_WORDPRESS_APP()->get_app_name(),
@@ -259,7 +261,7 @@ class WPCD_REST_API_Controller_Sites extends WPCD_REST_API_Controller_Base {
 		$this->validate_required_parameters( $parameters, array( 'action' ) );
 
 		$app_name = WPCD_WORDPRESS_APP()->get_app_name();
-		$action   = $parameters['action'];
+		$action   = sanitize_key( $parameters['action'] );
 
 		// execute hook associated with the action.
 		$result = apply_filters( "wpcd_app_{$app_name}_tab_action", '', $action, $site_id );

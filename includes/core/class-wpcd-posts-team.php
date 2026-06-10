@@ -358,11 +358,13 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_get_permissions( $object_type, $only_ids = false ) {
 
 		$args = array(
-			'post_type'   => 'wpcd_permission_type',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_permission_type',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_object_type',
 					'value'   => $object_type,
@@ -400,11 +402,13 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_get_permission_groups( $group, $only_ids = false ) {
 
 		$args = array(
-			'post_type'   => 'wpcd_permission_type',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_permission_type',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_permission_group',
 					'value'   => $group,
@@ -448,7 +452,7 @@ class WPCD_POSTS_TEAM {
 		$get_teams_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE team_id = %d AND user_id = %d AND permission_type_id = %d", array( $team_id, $user_id, $permission_type_id ) );
 		$results       = $wpdb->get_results( $get_teams_sql );
 
-		if ( count( $results ) == 0 ) {
+		if ( 0 === count( $results ) ) {
 			// Insert if no such record found.
 			$wpdb->insert(
 				$wpdb->prefix . 'permission_assignments',
@@ -461,7 +465,7 @@ class WPCD_POSTS_TEAM {
 			);
 		} else {
 			foreach ( $results as $row ) {
-				if ( $row->granted == 0 ) {
+				if ( 0 === (int) $row->granted ) {
 					$wpdb->update(
 						$wpdb->prefix . 'permission_assignments',
 						array(
@@ -529,7 +533,7 @@ class WPCD_POSTS_TEAM {
 
 		global $pagenow;
 
-		if ( is_admin() && $query->is_main_query() && $query->query['post_type'] == 'wpcd_team' && $pagenow == 'edit.php' && ! wpcd_is_admin() ) {
+		if ( is_admin() && $query->is_main_query() && isset( $query->query['post_type'] ) && 'wpcd_team' === $query->query['post_type'] && 'edit.php' === $pagenow && ! wpcd_is_admin() ) {
 
 			$qv              = &$query->query_vars;
 			$user_id         = get_current_user_id();
@@ -563,7 +567,7 @@ class WPCD_POSTS_TEAM {
 
 		$screen = get_current_screen();
 
-		if ( $screen->post_type == 'wpcd_team' && isset( $_GET['action'] ) && $_GET['action'] == 'edit' && ! wpcd_is_admin() ) {
+		if ( 'wpcd_team' === $screen->post_type && isset( $_GET['action'] ) && 'edit' === sanitize_key( $_GET['action'] ) && ! wpcd_is_admin() ) {
 
 			if ( ! current_user_can( 'wpcd_manage_teams' ) ) {
 				wp_die( esc_html( __( 'You don\'t have access to this page.', 'wpcd' ) ) );
@@ -589,7 +593,7 @@ class WPCD_POSTS_TEAM {
 	 */
 	public function wpcd_team_custom_view_count( $views ) {
 		global $current_screen;
-		if ( $current_screen->id == 'edit-wpcd_team' && ! wpcd_is_admin() ) {
+		if ( 'edit-wpcd_team' === $current_screen->id && ! wpcd_is_admin() ) {
 			$views = $this->wpcd_team_manipulate_views( 'wpcd_team', $views );
 		}
 		return $views;
@@ -696,25 +700,30 @@ class WPCD_POSTS_TEAM {
 	 */
 	public function render_team_details_meta_box( $post ) {
 		$args = array(
-			'post_type'    => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status'  => 'private',
-			'meta_key'     => 'wpcd_assigned_teams',
-			'meta_value'   => $post->ID,
-			'meta_compare' => 'IN',
-			'numberposts'  => -1,
-			'fields'       => 'ids',
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'meta_key'               => 'wpcd_assigned_teams',
+			'meta_value'             => $post->ID,
+			'meta_compare'           => 'IN',
+			'numberposts'            => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$posts        = get_posts( $args );
 		$server_posts = array();
 		$app_posts    = array();
 
+		if ( $posts ) {
+			_prime_post_caches( $posts, false, false );
+		}
 		foreach ( $posts as $post ) {
-			if ( get_post_type( $post ) == 'wpcd_app_server' ) {
+			$post_type = get_post_type( $post );
+			if ( 'wpcd_app_server' === $post_type ) {
 				$server_posts[] = $post;
-			}
-
-			if ( get_post_type( $post ) == 'wpcd_app' ) {
+			} elseif ( 'wpcd_app' === $post_type ) {
 				$app_posts[] = $post;
 			}
 		}
@@ -763,42 +772,46 @@ class WPCD_POSTS_TEAM {
 		switch ( $column_name ) {
 			case 'wpcd_assigned_servers':
 				$args = array(
-					'post_type'    => 'wpcd_app_server',
-					'post_status'  => 'private',
-					'meta_key'     => 'wpcd_assigned_teams',
-					'meta_value'   => $post_id,
-					'meta_compare' => 'IN',
-					'numberposts'  => -1,
-					'fields'       => 'ids',
+					'post_type'              => 'wpcd_app_server',
+					'post_status'            => 'private',
+					'meta_key'               => 'wpcd_assigned_teams',
+					'meta_value'             => $post_id,
+					'meta_compare'           => 'IN',
+					'numberposts'            => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				);
 
 				$posts = get_posts( $args );
+				$count = count( $posts );
 
-				if ( count( $posts ) ) {
-					$value = sprintf( '<a href="%s" target="_blank">%d</a>', esc_url( admin_url( 'edit.php?post_type=wpcd_app_server&team_id=' . $post_id ) ), count( $posts ) );
-				} else {
-					$value = 0;
-				}
+				$value = $count
+					? sprintf( '<a href="%s" target="_blank">%d</a>', esc_url( admin_url( 'edit.php?post_type=wpcd_app_server&team_id=' . $post_id ) ), $count )
+					: 0;
 
 				break;
 			case 'wpcd_assigned_apps':
 				$args = array(
-					'post_type'    => 'wpcd_app',
-					'post_status'  => 'private',
-					'meta_key'     => 'wpcd_assigned_teams',
-					'meta_value'   => $post_id,
-					'meta_compare' => 'IN',
-					'numberposts'  => -1,
-					'fields'       => 'ids',
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'meta_key'               => 'wpcd_assigned_teams',
+					'meta_value'             => $post_id,
+					'meta_compare'           => 'IN',
+					'numberposts'            => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				);
 
 				$posts = get_posts( $args );
+				$count = count( $posts );
 
-				if ( count( $posts ) ) {
-					$value = sprintf( '<a href="%s" target="_blank">%d</a>', esc_url( admin_url( 'edit.php?post_type=wpcd_app&team_id=' . $post_id ) ), count( $posts ) );
-				} else {
-					$value = 0;
-				}
+				$value = $count
+					? sprintf( '<a href="%s" target="_blank">%d</a>', esc_url( admin_url( 'edit.php?post_type=wpcd_app&team_id=' . $post_id ) ), $count )
+					: 0;
 
 				break;
 			case 'wpcd_team_members':
@@ -807,6 +820,20 @@ class WPCD_POSTS_TEAM {
 				if ( empty( $wpcd_permission_rule ) ) {
 					$value = '-';
 				} else {
+					// Prime post-title caches for all permission IDs in a single query.
+					$all_perm_ids = array();
+					foreach ( array_slice( $wpcd_permission_rule, 0, 5 ) as $rule ) {
+						if ( ! empty( $rule['wpcd_server_permissions'] ) ) {
+							$all_perm_ids = array_merge( $all_perm_ids, (array) $rule['wpcd_server_permissions'] );
+						}
+						if ( ! empty( $rule['wpcd_app_permissions'] ) ) {
+							$all_perm_ids = array_merge( $all_perm_ids, (array) $rule['wpcd_app_permissions'] );
+						}
+					}
+					if ( ! empty( $all_perm_ids ) ) {
+						_prime_post_caches( array_unique( $all_perm_ids ), false, false );
+					}
+
 					$value = array();
 					$count = 1;
 					foreach ( $wpcd_permission_rule as $rule ) {
@@ -890,13 +917,16 @@ class WPCD_POSTS_TEAM {
 		if ( is_admin() && 'wpcd_team' === get_post_type( $post_id ) ) {
 			$posts = get_posts(
 				array(
-					'post_type'    => array( 'wpcd_app_server', 'wpcd_app' ),
-					'post_status'  => 'private',
-					'meta_key'     => 'wpcd_assigned_teams',
-					'meta_value'   => $post_id,
-					'meta_compare' => 'IN',
-					'numberposts'  => -1,
-					'fields'       => 'ids',
+					'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+					'post_status'            => 'private',
+					'meta_key'               => 'wpcd_assigned_teams',
+					'meta_value'             => $post_id,
+					'meta_compare'           => 'IN',
+					'numberposts'            => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -956,16 +986,22 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_team_user_profile_section( $user ) {
 
 		$args = array(
-			'post_type'   => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'fields'      => 'ids',
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$posts        = get_posts( $args );
 		$server_posts = array();
 		$app_posts    = array();
 
+		if ( $posts ) {
+			_prime_post_caches( $posts, false, false );
+		}
 		foreach ( $posts as $post ) {
 
 			$post_type = get_post_type( $post );
@@ -1016,19 +1052,15 @@ class WPCD_POSTS_TEAM {
 		if ( $wpcd_permission_rules ) {
 			$new_wpcd_permission_rules = wpcd_filter_input_numeric_array( $_POST['wpcd_permission_rule'] );
 
-			$team_members = array();
-
-			// Loop through team members in new rule.
+			// Build a hash set for O(1) deduplication lookups.
+			$team_members_set = array();
 			foreach ( $new_wpcd_permission_rules as $rule ) {
-				if ( in_array( $rule['wpcd_team_member'], $team_members ) ) {
-					continue;
-				}
-				$team_members[] = $rule['wpcd_team_member'];
+				$team_members_set[ $rule['wpcd_team_member'] ] = true;
 			}
 
-			// Update permissions for old team members.
+			// Update permissions for old team members not present in the new rule set.
 			foreach ( $wpcd_permission_rules as $rule ) {
-				if ( in_array( $rule['wpcd_team_member'], $team_members ) ) {
+				if ( isset( $team_members_set[ $rule['wpcd_team_member'] ] ) ) {
 					continue;
 				}
 

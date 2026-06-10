@@ -1211,10 +1211,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 		switch ( $action ) {
 			case 'mt-upgrade-all-tenants':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1229,10 +1231,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				break;
 			case 'mt-upgrade-tenants-selected-versions':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1252,10 +1256,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				break;
 			case 'mt-upgrade-tenants-selected-app-group':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1266,7 +1272,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 							'value' => 'mt_tenant',
 						),
 					),
-					'tax_query'   => array(
+					'tax_query'              => array(
 						array(
 							'taxonomy' => 'wpcd_app_group',
 							'field'    => 'term_id',
@@ -1911,6 +1917,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 				'post__in'       => empty( $destination_servers ) ? array( -1 ) : $destination_servers,
+				'no_found_rows'  => true,
 			),
 			'save_field' => false,
 			'attributes' => array(
@@ -2247,6 +2254,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				'posts_per_page' => -1,
 				'meta_key'       => 'wpcd_is_template_site',
 				'meta_value'     => '1',
+				'no_found_rows'  => true,
 			),
 			'save_field'  => false,
 			'attributes'  => array(
@@ -2544,7 +2552,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 			// Tag does not yet exist in the array so add it.
 			$tags[ $new_tag ] = array(
 				'reporting_time'           => time(),
-				'reporting_time_human'     => date( 'Y-m-d H:i:s', time() ),
+				'reporting_time_human'     => gmdate( 'Y-m-d H:i:s' ),
 				'reporting_time_human_utc' => gmdate( 'Y-m-d H:i:s' ),
 				'desc'                     => $new_tag_desc,
 				'domain'                   => $domain,
@@ -2553,7 +2561,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 		} else {
 			// Perhaps update the time here? Or add other history?  We really shouldn't get here though.
 			$tags[ $new_tag ]['last_pull_reporting_time']           = time();
-			$tags[ $new_tag ]['last_pull_reporting_time_human']     = date( 'Y-m-d H:i:s', time() );
+			$tags[ $new_tag ]['last_pull_reporting_time_human']     = gmdate( 'Y-m-d H:i:s' );
 			$tags[ $new_tag ]['last_pull_reporting_time_human_utc'] = gmdate( 'Y-m-d H:i:s' );
 		}
 

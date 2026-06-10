@@ -568,9 +568,11 @@ class WPCD_POSTS_App_Update_Plan extends WPCD_Posts_Base {
 		// Get list of product packages into an array to prepare it for display.
 		$wpcd_plans = get_posts(
 			array(
-				'post_type'   => 'wpcd_app_update_plan',
-				'post_status' => 'publish',
-				'numberposts' => -1,
+				'post_type'              => 'wpcd_app_update_plan',
+				'post_status'            => 'publish',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 		$wpcd_plans = array( 0 => __( 'None', 'wpcd' ) );
@@ -653,10 +655,12 @@ class WPCD_POSTS_App_Update_Plan extends WPCD_Posts_Base {
 
 				// Construct args array for get_posts function.
 				$args = array(
-					'posts_per_page' => -1,
-					'post_type'      => 'wpcd_app_server',
-					'post_status'    => 'private',
-					'tax_query'      => array(
+					'posts_per_page'         => -1,
+					'post_type'              => 'wpcd_app_server',
+					'post_status'            => 'private',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'tax_query'              => array(
 						array(
 							'taxonomy' => 'wpcd_app_server_group',
 							'field'    => 'term_id',
@@ -702,10 +706,11 @@ class WPCD_POSTS_App_Update_Plan extends WPCD_Posts_Base {
 
 				// Construct args array for get_posts function.
 				$args = array(
-					'posts_per_page' => -1,
-					'post_type'      => 'wpcd_app',
-					'post_status'    => 'private',
-					'tax_query'      => array(
+					'posts_per_page'         => -1,
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'no_found_rows'          => true,
+					'tax_query'              => array(
 						array(
 							'taxonomy' => 'wpcd_app_group',
 							'field'    => 'term_id',

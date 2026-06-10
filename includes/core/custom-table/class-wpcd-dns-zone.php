@@ -209,7 +209,7 @@ class WPCD_CT_DNS_Zone extends WPCD_MB_Custom_Table {
 		$has_access = false;
 		$message = '';
 		
-		if( $action == 'edit'  || $action == 'delete') {
+		if ( 'edit' === $action || 'delete' === $action ) {
 			$item = $this->api->get_by_id( $zone_id );
 			if( $item ) {
 				$provider_id = $item->parent_id;
@@ -350,7 +350,7 @@ class WPCD_CT_DNS_Zone extends WPCD_MB_Custom_Table {
 		
 		
 		if( !$error ) {
-			if( $view_type == 'public' ) {
+			if ( 'public' === $view_type ) {
 				$items = $this->display_public_child_items_table( $provider_id );
 			} else {
 				$items = $this->display_child_items_table( $provider_id );
@@ -376,13 +376,17 @@ class WPCD_CT_DNS_Zone extends WPCD_MB_Custom_Table {
 		
 		$view = $this->get_view();
 		$add_item_url = add_query_arg( [
-				'action' =>  "wpcd_{$this->get_model_name()}_inline_add",
-				'parent-id'	=> rwmb_request()->get('model-id'),
-				'view'=> $view ,
-				'nonce'=> $this->get_view_nonce( $view, "add_{$this->get_model_name()}" ),
-			], admin_url( "admin-ajax.php" ) );
+				'action'    => "wpcd_{$this->get_model_name()}_inline_add",
+				'parent-id' => absint( rwmb_request()->get( 'model-id' ) ),
+				'view'      => $view,
+				'nonce'     => $this->get_view_nonce( $view, "add_{$this->get_model_name()}" ),
+			], admin_url( 'admin-ajax.php' ) );
 
-		printf('<a href="%s" class="mp_edit_inline wpcd-button wpcd-ct-add-item-link">%s</a>', $add_item_url, 'Add new Zone' );
+		printf(
+			'<a href="%s" class="mp_edit_inline wpcd-button wpcd-ct-add-item-link">%s</a>',
+			esc_url( $add_item_url ),
+			esc_html__( 'Add new Zone', 'wpcd' )
+		);
 	}
 	
 	/**

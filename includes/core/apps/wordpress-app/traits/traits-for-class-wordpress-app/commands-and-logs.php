@@ -447,20 +447,24 @@ trait wpcd_wpapp_commands_and_logs {
 		// server actions.
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app_server',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'key'   => "wpcd_server_{$this->get_app_name()}_action_status",
 						'value' => 'in-progress',
 					),
 				),
-				'fields'      => 'ids',
+				'fields'                 => 'ids',
 			)
 		);
 
 		if ( $posts ) {
+			update_postmeta_cache( $posts );
 			foreach ( $posts as $id ) {
 				$action = get_post_meta( $id, "wpcd_server_{$this->get_app_name()}_action", true );
 				do_action( 'wpcd_log_error', "calling deferred SERVER action $action for $id", 'debug', __FILE__, __LINE__ );
@@ -488,20 +492,24 @@ trait wpcd_wpapp_commands_and_logs {
 		// app actions.
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'key'   => "wpcd_app_{$this->get_app_name()}_action_status",
 						'value' => 'in-progress',
 					),
 				),
-				'fields'      => 'ids',
+				'fields'                 => 'ids',
 			)
 		);
 
 		if ( $posts ) {
+			update_postmeta_cache( $posts );
 			foreach ( $posts as $id ) {
 				$action = get_post_meta( $id, "wpcd_app_{$this->get_app_name()}_action", true );
 				do_action( 'wpcd_log_error', "calling repeated action $action for $id", 'debug', __FILE__, __LINE__ );

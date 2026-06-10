@@ -276,11 +276,12 @@ class WPCD_APP extends WPCD_Base {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(),
-				'author'      => $user_id,
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'author'                 => $user_id,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 
@@ -308,11 +309,12 @@ class WPCD_APP extends WPCD_Base {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app_server',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(),
-				'author'      => $user_id,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'author'                 => $user_id,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 

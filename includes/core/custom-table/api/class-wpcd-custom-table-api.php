@@ -320,14 +320,17 @@ abstract class WPCD_Custom_Table_API {
 		$user_meta = get_userdata( $user_id );
 		$user_roles = $user_meta->roles;
 
-		$q = ( $by_parent ? 'p' : 't1' ) . '.owner = %d OR 
-				( 
-					( m.meta_key=\'allowed_roles\' AND m.meta_value IN(\''. implode("','", $user_roles ).'\') ) OR 
+		$user_roles_placeholders = implode( ',', array_fill( 0, count( $user_roles ), '%s' ) );
+
+		$q = ( $by_parent ? 'p' : 't1' ) . '.owner = %d OR
+				(
+					( m.meta_key=\'allowed_roles\' AND m.meta_value IN(' . $user_roles_placeholders . ') ) OR
 					( m.meta_key=\'allowed_users\' AND m.meta_value = %d )
 				)';
 
+		$prepare_args = array_merge( array( $user_id ), $user_roles, array( $user_id ) );
 
-		return $wpdb->prepare( $q, $user_id, $user_id );
+		return $wpdb->prepare( $q, ...$prepare_args );
 	}
 	
 	/**
@@ -369,7 +372,7 @@ abstract class WPCD_Custom_Table_API {
 		
 		if( 3 === $should_add ) {
 			return array();
-		} elseif ( 2 == $should_add ) {
+		} elseif ( 2 === $should_add ) {
 			$joins = $this->permission_query_join( $user_id );
 			$where .= ' WHERE ' . $this->permission_where_clause( $user_id );
 		}

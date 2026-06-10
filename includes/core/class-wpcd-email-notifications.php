@@ -740,12 +740,14 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Check and get all the email address either for server or site.
 		$emails_args    = array(
-			'post_type'   => 'wpcd_email_address',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_email_address',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_email_addresses_parent_id',
 					'value'   => $post_id,
@@ -899,15 +901,17 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		// Permission check - user access.
 		$this->wpcd_email_user_check_server_app_permission( get_current_user_id(), $parent_id );
 
-		// Check entry_id in wpcd_notify_user.
+		// Check entry_id exists and belongs to parent — fetch only ID, no extra data needed.
 		$email_args = array(
-			'post_type'   => 'wpcd_email_address',
-			'post_status' => 'private',
-			'p'           => $entry_id,
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_email_address',
+			'post_status'            => 'private',
+			'p'                      => $entry_id,
+			'posts_per_page'         => 1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_email_addresses_parent_id',
 					'value'   => $parent_id,
@@ -954,8 +958,9 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		// Server id or app id OR server_batch_id or app_batch_id.
 		$post_id = filter_input( INPUT_POST, 'post_id', FILTER_SANITIZE_NUMBER_INT );
 
+		$post_type = get_post_type( $post_id );
 		// Check for bulk action.
-		if ( get_post_type( $post_id ) === 'wpcd_server_batch' || get_post_type( $post_id ) === 'wpcd_app_batch' ) {
+		if ( 'wpcd_server_batch' === $post_type || 'wpcd_app_batch' === $post_type ) {
 
 			// Server or app ids.
 			$bulk_action_ids = get_post_meta( $post_id, 'wpcd_bulk_server_app_ids', true );
@@ -1045,8 +1050,9 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		$post_id      = filter_input( INPUT_POST, 'post_id', FILTER_SANITIZE_NUMBER_INT );
 		$all_bulk_ids = array();
 
+		$post_type = get_post_type( $post_id );
 		// Check for bulk action.
-		if ( get_post_type( $post_id ) === 'wpcd_server_batch' || get_post_type( $post_id ) === 'wpcd_app_batch' ) {
+		if ( 'wpcd_server_batch' === $post_type || 'wpcd_app_batch' === $post_type ) {
 
 			// Server or app ids.
 			$bulk_action_ids = get_post_meta( $post_id, 'wpcd_bulk_server_app_ids', true );
@@ -1109,7 +1115,8 @@ class WPCD_EMAIL_NOTIFICATIONS {
 	 */
 	public function wpcd_update_common_fields_for_compose_email_tab( $post_id, $wpcd_compose_email_send_to_server_emails, $wpcd_compose_email_other_emails, $wpcd_compose_email_from_name, $wpcd_compose_email_reply_to, $wpcd_compose_email_subject, $wpcd_compose_email_body ) {
 		// Check if server screen then update the particular field.
-		if ( get_post_type( $post_id ) === 'wpcd_app_server' || get_post_type( $post_id ) === 'wpcd_server_batch' ) {
+		$post_type = get_post_type( $post_id );
+		if ( 'wpcd_app_server' === $post_type || 'wpcd_server_batch' === $post_type ) {
 			update_post_meta( $post_id, 'wpcd_compose_email_send_to_server_emails', $wpcd_compose_email_send_to_server_emails );
 		}
 		// Update all the fields values.
@@ -1130,13 +1137,17 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Check and get all the email address either for server or site.
 		$emails_args = array(
-			'post_type'   => 'wpcd_email_address',
-			'post_status' => 'private',
-			'numberposts' => -1,
+			'post_type'              => 'wpcd_email_address',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
+		$post_type = get_post_type( $post_id );
 		// Check for bulk action.
-		if ( get_post_type( $post_id ) === 'wpcd_server_batch' || get_post_type( $post_id ) === 'wpcd_app_batch' ) {
+		if ( 'wpcd_server_batch' === $post_type || 'wpcd_app_batch' === $post_type ) {
 			// Server or app ids.
 			$bulk_action_ids = get_post_meta( $post_id, 'wpcd_bulk_server_app_ids', true );
 			$all_bulk_ids    = explode( ', ', $bulk_action_ids );
@@ -1196,12 +1207,24 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		$wpcd_compose_email_body         = get_post_meta( $post_id, 'wpcd_compose_email_body', true );
 
 		// Check for the server screen or server batch screen.
-		if ( get_post_type( $post_id ) === 'wpcd_app_server' || get_post_type( $post_id ) === 'wpcd_server_batch' ) {
+		$post_type = get_post_type( $post_id );
+		if ( 'wpcd_app_server' === $post_type || 'wpcd_server_batch' === $post_type ) {
 			$send_to_emails = get_post_meta( $post_id, 'wpcd_compose_email_send_to_server_emails', true );
 
 			if ( 'servers_apps_both_emails' === $send_to_emails ) {
 				// Check for bulk action.
-				if ( get_post_type( $post_id ) === 'wpcd_server_batch' ) {
+				// Get all the apps associated with the server.
+				$args = array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'posts_per_page'         => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				);
+
+				if ( 'wpcd_server_batch' === $post_type ) {
 					// Server or app ids.
 					$bulk_action_ids = get_post_meta( $post_id, 'wpcd_bulk_server_app_ids', true );
 					$all_bulk_ids    = explode( ', ', $bulk_action_ids );
@@ -1224,14 +1247,6 @@ class WPCD_EMAIL_NOTIFICATIONS {
 					);
 				}
 
-				// Get all the apps associated with the server.
-				$args = array(
-					'post_type'      => 'wpcd_app',
-					'post_status'    => 'private',
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				);
-
 				$app_ids = get_posts( $args );
 				if ( ! empty( $app_ids ) ) {
 					foreach ( $app_ids as $key => $value ) {
@@ -1250,7 +1265,7 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		}
 		$other_emails_arr = array();  // Create array of other emails.
 		// Create full array with empty first name and last name for custom added emails.
-		if ( get_post_type( $post_id ) === 'wpcd_server_batch' || get_post_type( $post_id ) === 'wpcd_app_batch' ) {
+		if ( 'wpcd_server_batch' === $post_type || 'wpcd_app_batch' === $post_type ) {
 			if ( ! empty( $other_emails ) ) {
 				foreach ( $other_emails as $key => $value ) {
 					$other_emails_arr[ $value ] = array(
@@ -1296,7 +1311,8 @@ class WPCD_EMAIL_NOTIFICATIONS {
 				// Get server owner first name & last name and server name & site name.
 				$server_name = '';
 				$site_name   = '';
-				if ( get_post_type( $parent_id ) === 'wpcd_server_batch' || get_post_type( $parent_id ) === 'wpcd_app_batch' ) {
+				$parent_post_type = get_post_type( $parent_id );
+				if ( 'wpcd_server_batch' === $parent_post_type || 'wpcd_app_batch' === $parent_post_type ) {
 					$bulk_action_found = true;
 					// Server or app ids.
 					$bulk_action_ids = get_post_meta( $parent_id, 'wpcd_bulk_server_app_ids', true );
@@ -1499,19 +1515,25 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Get all servers.
 		$server_args = array(
-			'post_type'      => 'wpcd_app_server',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app_server',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$server_ids  = get_posts( $server_args );
 
 		// Get all apps.
 		$app_args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$app_ids  = get_posts( $app_args );
 
@@ -1653,12 +1675,14 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Check entry_id in wpcd_sent_emails.
 		$sent_email_args = array(
-			'post_type'   => 'wpcd_sent_emails',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_sent_emails',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_sent_email_parent_id',
 					'value'   => $parent_id,
@@ -1673,7 +1697,10 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 			if ( '0' === (string) $entry_id ) {
 				// Delete all entries.
-				$delete_query = "DELETE p, pm FROM wp_posts p INNER JOIN wp_postmeta pm ON pm.post_id = p.ID WHERE p.post_type = 'wpcd_sent_emails' AND pm.meta_key = 'wpcd_sent_email_parent_id' AND pm.meta_value = '" . $parent_id . "'";
+				$delete_query = $wpdb->prepare(
+					"DELETE p, pm FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID WHERE p.post_type = 'wpcd_sent_emails' AND pm.meta_key = 'wpcd_sent_email_parent_id' AND pm.meta_value = %d",
+					(int) $parent_id
+				);
 
 				$deleted = $wpdb->query( $delete_query );
 			} else {
@@ -1729,23 +1756,27 @@ class WPCD_EMAIL_NOTIFICATIONS {
 		$last_btn     = true;
 		$start        = $page * $per_page;
 
-		// Get total sent email entries.
-		$all_sent_emails   = array(
-			'post_type'   => 'wpcd_sent_emails',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'meta_query'  => array(
+		// Get total sent email count using a lightweight IDs-only query.
+		$count = count(
+			get_posts(
 				array(
-					'key'     => 'wpcd_sent_email_parent_id',
-					'value'   => $parent_id,
-					'compare' => '=',
-				),
-			),
+					'post_type'              => 'wpcd_sent_emails',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
+						array(
+							'key'     => 'wpcd_sent_email_parent_id',
+							'value'   => $parent_id,
+							'compare' => '=',
+						),
+					),
+				)
+			)
 		);
-		$count_sent_emails = get_posts( $all_sent_emails );
-		$count             = count( $count_sent_emails );
 
 		// Check and get all the sent emails either for server or site.
 		$sent_emails_args = array(

@@ -46,10 +46,9 @@ class WPCD_DATA_SYNC_REST {
 			add_filter(
 				'rest_pre_serve_request',
 				function( $value ) {
-					header( 'Access-Control-Allow-Headers: Authorization, X-WP-Nonce,Content-Type, X-Requested-With' );
+					header( 'Access-Control-Allow-Headers: Authorization, X-WP-Nonce, Content-Type, X-Requested-With' );
 					header( 'Access-Control-Allow-Origin: *' );
 					header( 'Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE' );
-					header( 'Access-Control-Allow-Credentials: true' );
 					return $value;
 				},
 				11
@@ -194,7 +193,7 @@ class WPCD_DATA_SYNC_REST {
 								$delete_id = $value->restore_id;
 							}
 							if ( $delete_id ) {
-								$delete_query = "DELETE FROM $table_name WHERE restore_id <= $delete_id";
+								$delete_query = $wpdb->prepare( "DELETE FROM {$table_name} WHERE restore_id <= %d", (int) $delete_id );
 								$wpdb->query( $delete_query );
 							}
 						}

@@ -1850,7 +1850,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SERVICES extends WPCD_WORDPRESS_TABS {
 
 		// write the entire status array to the server cpt.
 		update_post_meta( $id, 'wpcd_wpapp_services_status', $services_status );
-		update_post_meta( $id, 'wpcd_wpapp_services_status_date', 'Last checked on ' . date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) );
+		update_post_meta( $id, 'wpcd_wpapp_services_status_date', 'Last checked on ' . gmdate( 'Y-m-d H:i:s' ) );
 
 		// Let user know command is complete and force a page refresh.
 		$result = array(
@@ -2003,7 +2003,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SERVICES extends WPCD_WORDPRESS_TABS {
 
 		// write the entire status array to the server cpt.
 		update_post_meta( $id, 'wpcd_wpapp_services_php_status', $services_status );
-		update_post_meta( $id, 'wpcd_wpapp_services_php_status_date', 'Last checked on ' . date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) );
+		update_post_meta( $id, 'wpcd_wpapp_services_php_status_date', 'Last checked on ' . gmdate( 'Y-m-d H:i:s' ) );
 
 		// Let user know command is complete and force a page refresh.
 		$result = array(
@@ -3085,7 +3085,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SERVICES extends WPCD_WORDPRESS_TABS {
 		// Format the data.
 		$return = '<div class="wpcd_push_data wpcd_maldet_scan_push_data">';
 			/* translators: %s is a date string. */
-			$return .= '<p class="wpcd_push_data_reporting_time">' . sprintf( __( 'Data current as of: %s ', 'wpcd' ), date( 'Y-m-d H:i:s', (int) $reporting_time ) ) . '</p>';
+			$return .= '<p class="wpcd_push_data_reporting_time">' . sprintf( __( 'Data current as of: %s ', 'wpcd' ), gmdate( 'Y-m-d H:i:s', (int) $reporting_time ) ) . '</p>';
 			$return .= '<div class="wpcd_push_data_inner_wrap wpcd_maldet_scan_push_data_inner_wrap">';
 
 				/* Total files scanned */

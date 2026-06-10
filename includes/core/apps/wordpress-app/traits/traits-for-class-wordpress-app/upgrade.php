@@ -127,9 +127,11 @@ trait wpcd_wpapp_upgrade_functions {
 			// If we got here then we're doing a system-wide upgrade check.
 			// So we need to start checking to see if ANY individual servers still need to be upgraded.
 			$args = array(
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'posts_per_page' => 99999,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'posts_per_page'         => 99999,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			);
 		}
 
@@ -202,9 +204,11 @@ trait wpcd_wpapp_upgrade_functions {
 			// If we got here then we're doing a system-wide upgrade check.
 			// So we need to start checking to see if ANY individual servers still need to be upgraded.
 			$args = array(
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'posts_per_page' => 99999,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'posts_per_page'         => 99999,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			);
 		}
 
@@ -279,9 +283,11 @@ trait wpcd_wpapp_upgrade_functions {
 			// If we got here then we're doing a system-wide upgrade check.
 			// So we need to start checking to see if ANY individual servers still need to be upgraded.
 			$args = array(
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'posts_per_page' => 99999,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'posts_per_page'         => 99999,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			);
 		}
 
@@ -356,9 +362,11 @@ trait wpcd_wpapp_upgrade_functions {
 			// If we got here then we're doing a system-wide upgrade check.
 			// So we need to start checking to see if ANY individual servers still need to be upgraded.
 			$args = array(
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'posts_per_page' => 99999,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'posts_per_page'         => 99999,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			);
 		}
 
@@ -440,9 +448,11 @@ trait wpcd_wpapp_upgrade_functions {
 			// If we got here then we're doing a system-wide upgrade check.
 			// So we need to start checking to see if ANY individual servers still need to be upgraded.
 			$args = array(
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'posts_per_page' => 99999,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'posts_per_page'         => 99999,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			);
 		}
 
@@ -563,11 +573,14 @@ trait wpcd_wpapp_upgrade_functions {
 
 		/* Get list of app records. */
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => 99999,
-			'fields'         => 'ids',
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => 99999,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'     => 'app_type',
@@ -581,6 +594,9 @@ trait wpcd_wpapp_upgrade_functions {
 		$posts = get_posts( $args );
 
 		// Loop through and stamp.
+		if ( $posts ) {
+			update_postmeta_cache( $posts );
+		}
 		foreach ( $posts as $key => $id ) {
 
 			$php_version = wpcd_maybe_unserialize( get_post_meta( $id, 'wpapp_php_version', true ) );

@@ -389,11 +389,14 @@ trait wpcd_metaboxes_for_taxonomies_for_servers_and_apps {
 	public function get_app_server_ids( $field_key, $field_value ) {
 		$parents = get_posts(
 			array(
-				'posts_per_page' => -1,
-				'post_type'      => 'wpcd_app_server',
-				'post_status'    => 'private',
-				'fields'         => 'ids', // Just get IDs, not objects.
-				'meta_query'     => array(
+				'posts_per_page'         => -1,
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'field'   => $field_key,
 						'value'   => $field_value,
@@ -432,7 +435,7 @@ trait wpcd_metaboxes_for_taxonomies_for_servers_and_apps {
 			$clauses['where']  .= "AND (taxonomy = '" . $this->get_post_taxonomy() . "' OR taxonomy IS NULL)";
 			$clauses['groupby'] = 'object_id';
 			$clauses['orderby'] = "GROUP_CONCAT({$wpdb->terms}.name ORDER BY name ASC)";
-			if ( strtoupper( $wp_query->get( 'order' ) ) == 'ASC' ) {
+			if ( 'ASC' === strtoupper( $wp_query->get( 'order' ) ) ) {
 				$clauses['orderby'] .= 'ASC';
 			} else {
 				$clauses['orderby'] .= 'DESC';

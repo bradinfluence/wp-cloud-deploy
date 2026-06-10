@@ -465,7 +465,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 				// the _action that will be called in ajax.
 				'data-wpcd-action'              => 'backup-run-manual',
 				// fields that contribute data for this action.
-				'data-wpcd-fields'              => json_encode( array( '#wpcd_app_aws_bucket_manual_backup' ) ), // the id.
+				'data-wpcd-fields'              => wp_json_encode( array( '#wpcd_app_aws_bucket_manual_backup' ) ), // the id.
 				'data-wpcd-id'                  => $id,
 				// make sure we give the user a confirmation prompt.
 				'data-wpcd-confirmation-prompt' => __( 'Are you sure you would like to start a backup now?', 'wpcd' ), // show log console?
@@ -582,7 +582,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 				// the _action that will be called in ajax.
 				'data-wpcd-action'              => 'backup-run-schedule',
 				// fields that contribute data for this action.
-				'data-wpcd-fields'              => 'on' === $auto_backup_status ? '' : json_encode( array( '#wpcd_app_action_auto_backup_bucket_name', '#wpcd_app_action_auto_backup_retention_days', '#wpcd_app_action_auto_backup_delete_remotes' ) ),                // the id.
+				'data-wpcd-fields'              => 'on' === $auto_backup_status ? '' : wp_json_encode( array( '#wpcd_app_action_auto_backup_bucket_name', '#wpcd_app_action_auto_backup_retention_days', '#wpcd_app_action_auto_backup_delete_remotes' ) ),                // the id.
 				'data-wpcd-id'                  => $id,
 				// make sure we give the user a confirmation prompt.
 				'data-wpcd-confirmation-prompt' => $auto_backups_confirmation_prompt,
@@ -717,7 +717,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 				// the id.
 				'data-wpcd-id'                  => $id,
 				// fields that contribute data for this action.
-				'data-wpcd-fields'              => json_encode( array( '#wpcd_app_action_backup_list' ) ),              // make sure we give the user a confirmation prompt.
+				'data-wpcd-fields'              => wp_json_encode( array( '#wpcd_app_action_backup_list' ) ),              // make sure we give the user a confirmation prompt.
 				'data-wpcd-confirmation-prompt' => __( 'Are you really really SURE you want to restore this backup, overwriting all data on the existing site?', 'wpcd' ),
 				// show log console?
 				'data-show-log-console'         => true,
@@ -742,7 +742,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 				// the id.
 				'data-wpcd-id'                  => $id,
 				// fields that contribute data for this action.
-				'data-wpcd-fields'              => json_encode( array( '#wpcd_app_action_backup_list' ) ), // make sure we give the user a confirmation prompt.
+				'data-wpcd-fields'              => wp_json_encode( array( '#wpcd_app_action_backup_list' ) ), // make sure we give the user a confirmation prompt.
 				'data-wpcd-confirmation-prompt' => __( 'Are you really really SURE you want to restore this backup, overwriting your web server configuration file on the existing site?', 'wpcd' ),
 				// show log console?
 				'data-show-log-console'         => true,
@@ -767,7 +767,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 				// the id.
 				'data-wpcd-id'                  => $id,
 				// fields that contribute data for this action.
-				'data-wpcd-fields'              => json_encode( array( '#wpcd_app_action_backup_list' ) ),              // make sure we give the user a confirmation prompt.
+				'data-wpcd-fields'              => wp_json_encode( array( '#wpcd_app_action_backup_list' ) ),              // make sure we give the user a confirmation prompt.
 				'data-wpcd-confirmation-prompt' => __( 'Are you really really SURE you want to restore this backup, overwriting your wpconfig.php configuration file on the existing site?', 'wpcd' ),
 				// show log console?
 				'data-show-log-console'         => true,
@@ -879,7 +879,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 					// the id.
 					'data-wpcd-id'                  => $id,
 					// fields that contribute data for this action.
-					'data-wpcd-fields'              => json_encode( array( '#wpcd_app_action_manual_prune_backup_retention_days' ) ),               // make sure we give the user a confirmation prompt.
+					'data-wpcd-fields'              => wp_json_encode( array( '#wpcd_app_action_manual_prune_backup_retention_days' ) ),               // make sure we give the user a confirmation prompt.
 					'data-wpcd-confirmation-prompt' => __( 'Are you really really SURE you want to prune backups for this site? This action cannot be reversed!', 'wpcd' ),
 					// show log console?
 					'data-show-log-console'         => true,
@@ -905,20 +905,23 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 		$sites = array();
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => 300,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'numberposts'            => 300,
+				'meta_query'             => array(
 					array(
 						'key'   => 'wpcd_server_initial_app_name',
 						'value' => $this->get_app_name(),
 					),
 				),
-				'fields'      => 'ids',
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 
 		if ( $posts ) {
+			update_postmeta_cache( $posts );
 			foreach ( $posts as $id ) {
 				$sites[ $id ] = get_post_meta( $id, 'wpapp_domain', true );
 			}
@@ -1090,7 +1093,7 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 
 		// Now that we know we've been successful update the app record with the new list of backups.
 		update_post_meta( $id, 'wpapp_backups_list', $backup_list );
-		update_post_meta( $id, 'wpapp_backups_list_date', date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) );
+		update_post_meta( $id, 'wpapp_backups_list_date', gmdate( 'Y-m-d H:i:s' ) );
 
 		// Always return true.
 		return true;

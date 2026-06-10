@@ -500,6 +500,18 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 	}
 
 	/**
+	 * Normalise a comma-separated string: trim spaces, deduplicate, sort, rejoin.
+	 *
+	 * @param string $input Raw comma-separated string.
+	 * @return string
+	 */
+	private function normalize_comma_list( string $input ): string {
+		$items = array_filter( explode( ',', str_replace( ' ', '', $input ) ) );
+		ksort( $items );
+		return implode( ',', $items );
+	}
+
+	/**
 	 * Display the user notify form popup when click on add new OR edit button
 	 */
 	public function wpcd_user_notification_display_form_popup() {
@@ -571,35 +583,10 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 			}
 		}
 
-		// Make array of email addresses.
-		$all_emails = str_replace( ' ', '', $email_addresses );
-		if ( ! empty( $all_emails ) ) {
-			$email_addresses = array();
-			$email_addresses = explode( ',', $all_emails );
-			$email_addresses = array_filter( $email_addresses );
-			ksort( $email_addresses );
-			$email_addresses = implode( ',', $email_addresses );
-		}
-
-		// make array of slack webhooks.
-		$all_webhooks = str_replace( ' ', '', $slack_webhooks );
-		if ( ! empty( $all_webhooks ) ) {
-			$slack_webhooks = array();
-			$slack_webhooks = explode( ',', $all_webhooks );
-			$slack_webhooks = array_filter( $slack_webhooks );
-			ksort( $slack_webhooks );
-			$slack_webhooks = implode( ',', $slack_webhooks );
-		}
-
-		// Make array of zapier webhooks.
-		$all_zapier_webhooks = str_replace( ' ', '', $zapier_webhooks );
-		if ( ! empty( $all_zapier_webhooks ) ) {
-			$zapier_webhooks = array();
-			$zapier_webhooks = explode( ',', $all_zapier_webhooks );
-			$zapier_webhooks = array_filter( $zapier_webhooks );
-			ksort( $zapier_webhooks );
-			$zapier_webhooks = implode( ',', $zapier_webhooks );
-		}
+		// Normalise comma-separated lists: trim spaces, sort, deduplicate.
+		$email_addresses = $this->normalize_comma_list( $email_addresses );
+		$slack_webhooks  = $this->normalize_comma_list( $slack_webhooks );
+		$zapier_webhooks = $this->normalize_comma_list( $zapier_webhooks );
 
 		// get current user details.
 		$author_id  = get_current_user_id();
@@ -607,7 +594,7 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 		$user_login = $usermeta->data->user_login;
 
 		// check if data need to be added or whether we need to update an existing user.
-		if ( $post_id == 0 ) {
+		if ( 0 === (int) $post_id ) {
 			$post_title = '';
 			if ( empty( $profile_name ) ) {
 				$post_title = 'Submitted by ' . $user_login;
@@ -627,11 +614,15 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 		} else {
 			// check post_id in wpcd_notify_user.
 			$notify_args = array(
-				'post_type'      => 'wpcd_notify_user',
-				'post_status'    => 'private',
-				'posts_per_page' => -1,
-				'p'              => $post_id,
-				'author'         => $author_id,
+				'post_type'              => 'wpcd_notify_user',
+				'post_status'            => 'private',
+				'posts_per_page'         => 1,
+				'p'                      => $post_id,
+				'author'                 => $author_id,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			);
 
 			$alert_found = get_posts( $notify_args );
@@ -663,7 +654,7 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 			update_post_meta( $post_id, 'wpcd_notify_user_slack_webhooks', $slack_webhooks );
 			update_post_meta( $post_id, 'wpcd_notify_user_zapier_send', $send_to_zapier );
 
-			if ( $send_to_zapier == 1 ) {
+			if ( 1 === (int) $send_to_zapier ) {
 				update_post_meta( $post_id, 'wpcd_notify_user_zapier_webhooks', $zapier_webhooks );
 			}
 
@@ -796,11 +787,15 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 
 		// check post_id in wpcd_notify_user.
 		$notify_args = array(
-			'post_type'      => 'wpcd_notify_user',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'p'              => $post_id,
-			'author'         => $author_id,
+			'post_type'              => 'wpcd_notify_user',
+			'post_status'            => 'private',
+			'posts_per_page'         => 1,
+			'p'                      => $post_id,
+			'author'                 => $author_id,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$alert_found = get_posts( $notify_args );
@@ -845,16 +840,17 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 	public function wpcd_show_notify_serialize_post_data( $notification_data ) {
 		$servers_list = '';
 		if ( ! empty( $notification_data ) && is_array( $notification_data ) ) {
+			// Prime post cache for all IDs in a single query.
+			$post_ids = array_filter( array_values( $notification_data ), 'is_numeric' );
+			if ( ! empty( $post_ids ) ) {
+				_prime_post_caches( $post_ids, false, false );
+			}
 			foreach ( $notification_data as $key => $value ) {
 				$post = get_post( $value );
 				if ( $post ) {
-					$value = $post->post_title; }
-
-				if ( $key != 0 ) {
-					$servers_list .= ', ' . $value;
-				} else {
-					$servers_list .= $value;
+					$value = $post->post_title;
 				}
+				$servers_list .= ( 0 !== (int) $key ) ? ', ' . $value : $value;
 			}
 		} else {
 			$servers_list = $notification_data;
@@ -875,8 +871,8 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 
 		// Generate an array of all servers that can be accessible by the user.
 		$user_servers = array();
-		if ( count( $all_servers_ids ) > 0 ) {
-			foreach ( $all_servers_ids as $serverkey => $servervalue ) {
+		if ( ! empty( $all_servers_ids ) ) {
+			foreach ( $all_servers_ids as $servervalue ) {
 				// get server name using id.
 				$server_name                  = WPCD_SERVER()->get_server_name( $servervalue );
 				$user_servers[ $servervalue ] = $server_name;
@@ -899,14 +895,11 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 
 		// Generate an array of all sites that can be accessible by the user.
 		$user_sites = array();
-		if ( count( $all_sites_ids ) > 0 ) {
-			foreach ( $all_sites_ids as $sitekey => $sitevalue ) {
-				// get title using post id.
-				$site_name = '';
-				$post      = get_post( $sitevalue );
-				if ( $post ) {
-					$site_name = $post->post_title; }
-				$user_sites[ $sitevalue ] = $site_name;
+		if ( ! empty( $all_sites_ids ) ) {
+			_prime_post_caches( $all_sites_ids, false, false );
+			foreach ( $all_sites_ids as $sitevalue ) {
+				$post                     = get_post( $sitevalue );
+				$user_sites[ $sitevalue ] = $post ? $post->post_title : '';
 			}
 		}
 

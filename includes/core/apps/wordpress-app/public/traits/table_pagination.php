@@ -37,7 +37,7 @@ trait table_pagination {
 	public function get_pagenum() {
 
 		$pagenum = 0;
-		if ( isset( $_REQUEST['_page'] ) ) {
+		if ( isset( $_GET['_page'] ) ) {
 			$pagenum = filter_input( INPUT_GET, '_page', FILTER_SANITIZE_NUMBER_INT );
 		}
 

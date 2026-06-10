@@ -9,15 +9,16 @@
     ],
     "type": "wordpress-plugin",
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
-        "johnpbloch/wordpress": "^5.8",
-        "cyruscollier/wp-test": "dev-master",
-        "spatie/phpunit-watcher": "^1.23",
-        "wp-coding-standards/wpcs": "^2.3",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
+        "johnpbloch/wordpress": "^6.5",
+        "wp-phpunit/wp-phpunit": "^6.5",
+        "phpunit/phpunit": "^10.0",
+        "wp-coding-standards/wpcs": "^3.1",
+        "phpcsstandards/phpcsutils": "^1.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
     },
     "extra": {
         "wordpress-install-dir": "vendor/wordpress/wordpress"

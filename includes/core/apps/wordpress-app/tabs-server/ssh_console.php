@@ -206,7 +206,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SSH_CONSOLE extends WPCD_WORDPRESS_TABS {
 				// make sure we give the user a confirmation prompt.
 				'confirmation_prompt' => __( 'Are you sure you would like to execute this command?', 'wpcd' ),
 				// fields that contribute data for this action.
-				'data-wpcd-fields'    => json_encode( array( '#wpcd_app_action_ssh-console-cmd' ) ),
+				'data-wpcd-fields'    => wp_json_encode( array( '#wpcd_app_action_ssh-console-cmd' ) ),
 				'columns'             => 1,
 			),
 			'type'           => 'button',
@@ -252,7 +252,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SSH_CONSOLE extends WPCD_WORDPRESS_TABS {
 						'columns'          => 2,
 						'std'              => __( 'Execute', 'wpcd' ),
 						// fields that contribute data for this action.
-						'data-wpcd-fields' => json_encode( array( "#wpcd_app_action_ssh-console-prior-cmd-$cntr" ) ),
+						'data-wpcd-fields' => wp_json_encode( array( "#wpcd_app_action_ssh-console-prior-cmd-$cntr" ) ),
 					),
 				);
 				$actions[ "ssh-console-prior-cmd-del-$cntr" ]  = array(
@@ -262,7 +262,7 @@ class WPCD_WORDPRESS_TABS_SERVER_SSH_CONSOLE extends WPCD_WORDPRESS_TABS {
 						'columns'          => 2,
 						'std'              => __( 'Delete', 'wpcd' ),
 						// fields that contribute data for this action.
-						'data-wpcd-fields' => json_encode( array( "#wpcd_app_action_ssh-console-prior-cmd-$cntr" ) ),
+						'data-wpcd-fields' => wp_json_encode( array( "#wpcd_app_action_ssh-console-prior-cmd-$cntr" ) ),
 					),
 				);
 			}

@@ -745,7 +745,7 @@ class WPCD_WORDPRESS_TABS_PHPMYADMIN extends WPCD_WORDPRESS_TABS {
 				'std'        => __( 'Switch To Local Database', 'wpcd' ),
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#local-dbname', '#local-dbuser', '#local-dbpass' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#local-dbname', '#local-dbuser', '#local-dbpass' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'local-database',
 					// the id.
@@ -833,7 +833,7 @@ class WPCD_WORDPRESS_TABS_PHPMYADMIN extends WPCD_WORDPRESS_TABS {
 				'std'        => __( 'Copy Database From Remote To Local', 'wpcd' ),
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#local-dbname-for-copy', '#local-dbuser-for-copy', '#local-dbpass-for-copy' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#local-dbname-for-copy', '#local-dbuser-for-copy', '#local-dbpass-for-copy' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'copy-database-from-remote-to-local',
 					// the id.
@@ -943,7 +943,7 @@ class WPCD_WORDPRESS_TABS_PHPMYADMIN extends WPCD_WORDPRESS_TABS {
 				'std'        => __( 'Switch To Remote Database', 'wpcd' ),
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#remote-dbhost', '#remote-dbport', '#remote-dbname', '#remote-dbuser', '#remote-dbpass' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#remote-dbhost', '#remote-dbport', '#remote-dbname', '#remote-dbuser', '#remote-dbpass' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'remote-database',
 					// the id.
@@ -1067,7 +1067,7 @@ class WPCD_WORDPRESS_TABS_PHPMYADMIN extends WPCD_WORDPRESS_TABS {
 				'std'        => __( 'Copy Database From Local To Remote', 'wpcd' ),
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#remote-dbhost-for-copy', '#remote-dbport-for-copy', '#remote-dbname-for-copy', '#remote-dbuser-for-copy', '#remote-dbpass-for-copy' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#remote-dbhost-for-copy', '#remote-dbport-for-copy', '#remote-dbname-for-copy', '#remote-dbuser-for-copy', '#remote-dbpass-for-copy' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'copy-database-from-local-to-remote',
 					// the id.

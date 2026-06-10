@@ -231,9 +231,9 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 
 			case 'wpcd_pending_task_start_date':
 			case 'wpcd_pending_task_complete_date':
-				$value = wp_kses_post( get_post_meta( $post_id, substr( $column_name, 5 ), true ) );
-				if ( ! empty( $value ) ) {
-					$value = date( date( 'Y-m-d @ H:i', $value ) );
+				$ts = (int) get_post_meta( $post_id, substr( $column_name, 5 ), true );
+				if ( $ts ) {
+					$value = gmdate( 'Y-m-d @ H:i', $ts );
 				}
 
 			default:
@@ -548,6 +548,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_key',
@@ -583,6 +585,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_state',
@@ -619,6 +623,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'posts_per_page' => -1,
 			'orderby'        => $orderby,
 			'order'          => $order,
+			'no_found_rows'         => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'parent_post_id',
@@ -699,17 +705,17 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 
 		// Add messages to message field.
 		if ( ! empty( $task_message ) ) {
-			if ( empty( get_post_meta( $id, 'pending_task_messages', true ) ) ) {
+			$current_messages = get_post_meta( $id, 'pending_task_messages', true );
+			if ( empty( $current_messages ) ) {
 				update_post_meta( $id, 'pending_task_messages', $task_message );
 			} else {
-				$old_message  = get_post_meta( $id, 'pending_task_messages', true );
-				$new_message .= '<br />' . $task_message;
-				update_post_meta( $id, 'pending_task_messages', $new_message );
+				update_post_meta( $id, 'pending_task_messages', $current_messages . '<br />' . $task_message );
 			}
 		}
 
 		// Increment the attempted count.
-		update_post_meta( $id, 'pending_task_attempts', ( ( (int) get_post_meta( $id, 'pending_task_attempts', true ) ) + 1 ) );
+		$current_attempts = (int) get_post_meta( $id, 'pending_task_attempts', true );
+		update_post_meta( $id, 'pending_task_attempts', $current_attempts + 1 );
 
 	}
 
@@ -779,6 +785,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'post_type'      => 'wpcd_pending_log',
 			'post_status'    => 'private',
 			'posts_per_page' => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_associated_server_id',
@@ -814,6 +822,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 			'posts_per_page' => -1,
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
+			'no_found_rows'         => true,
+			'update_post_term_cache' => false,
 			'meta_query'     => array(
 				array(
 					'key'   => 'pending_task_state',
@@ -952,12 +962,14 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 		$compare_date = time() - ( 3600 * 2 );
 
 		$pending_logs_args = array(
-			'post_type'   => 'wpcd_pending_log',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_pending_log',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'     => 'pending_task_state',
@@ -1213,6 +1225,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 				'post_type'      => 'wpcd_pending_log',
 				'post_status'    => 'private',
 				'posts_per_page' => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 				'fields'         => 'ids', // Only get post IDs.
 				'meta_query'     => array(
 					'relation' => 'AND',
@@ -1239,6 +1253,8 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 				'post_type'      => 'wpcd_pending_log',
 				'post_status'    => 'private',
 				'posts_per_page' => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 				'fields'         => 'ids', // Only get post IDs.
 				'meta_query'     => array(
 					'relation' => 'AND',
@@ -1280,13 +1296,16 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 		$compare_time = time() - ( 15 * MINUTE_IN_SECONDS );
 
 		$pending_task_args = array(
-			'post_type'   => 'wpcd_pending_log',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'fields'      => 'ids',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_pending_log',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'     => 'pending_task_state',

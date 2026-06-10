@@ -386,16 +386,19 @@ class WPCD_BASIC_SERVER_APP extends WPCD_APP {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app_server',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'meta_query'             => array(
 					array(
 						'key'   => 'wpcd_server_basic-server_action_status',
 						'value' => 'in-progress',
 					),
 				),
-				'fields'      => 'ids',
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 

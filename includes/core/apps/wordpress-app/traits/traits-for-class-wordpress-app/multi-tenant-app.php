@@ -274,10 +274,12 @@ trait wpcd_wpapp_multi_tenant_app {
 	public function get_mt_version_sites_by_version( $mt_version ) {
 
 		$query_args = array(
-			'post_type'   => 'wpcd_app',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'   => 'wpcd_app_mt_site_type',
@@ -309,10 +311,12 @@ trait wpcd_wpapp_multi_tenant_app {
 	public function get_mt_version_clone_sites_by_version_and_server_id( $mt_version, $server_id ) {
 
 		$query_args = array(
-			'post_type'   => 'wpcd_app',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'   => 'wpcd_app_mt_site_type',

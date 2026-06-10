@@ -353,9 +353,9 @@ class WPCD_CT_DNS_Provider extends WPCD_MB_Custom_Table {
 		
 		$result = array( 'success' => true, 'error' => '' );
 		
-		if( $this->action() == 'edit' && !$this->user_can_edit( $provider_id ) ) {
+		if ( 'edit' === $this->action() && ! $this->user_can_edit( $provider_id ) ) {
 			$error = 'You are not allowed to edit dns provider.';
-		} elseif($this->action() == 'add' && !$this->user_can_add() ) {
+		} elseif ( 'add' === $this->action() && ! $this->user_can_add() ) {
 			$error = 'You are not allowed to add dns provider.';
 		} elseif( empty( $dns_name ) || !$dns_name ) {
 			$error = "DNS Name is required";

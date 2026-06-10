@@ -913,36 +913,44 @@ class WPCD_POSTS_APP_SERVER extends WPCD_Posts_Base {
 
 		$html = '';
 
-		$wpcd_server_title                = $post->post_title;
-		$wpcd_server_region               = get_post_meta( $post->ID, 'wpcd_server_region', true );
-		$wpcd_server_size                 = get_post_meta( $post->ID, 'wpcd_server_size', true );
-		$wpcd_server_size_raw             = get_post_meta( $post->ID, 'wpcd_server_size_raw', true );
-		$wpcd_server_ipv4                 = get_post_meta( $post->ID, 'wpcd_server_ipv4', true );
-		$wpcd_server_ipv6                 = get_post_meta( $post->ID, 'wpcd_server_ipv6', true );
-		$wpcd_server_name                 = get_post_meta( $post->ID, 'wpcd_server_name', true );
-		$wpcd_server_wc_order_id          = get_post_meta( $post->ID, 'wpcd_server_wc_order_id', true );
-		$wpcd_server_provider             = get_post_meta( $post->ID, 'wpcd_server_provider', true );
-		$wpcd_server_provider_instance_id = get_post_meta( $post->ID, 'wpcd_server_provider_instance_id', true );
-		$wpcd_server_created              = get_post_meta( $post->ID, 'wpcd_server_created', true );
-		$wpcd_server_parent_post_id       = get_post_meta( $post->ID, 'wpcd_server_parent_post_id', true );
-		$wpcd_server_scripts_version      = get_post_meta( $post->ID, 'wpcd_server_scripts_version', true );
+		$wpcd_server_title = $post->post_title;
 
-		$wpcd_server_init                   = get_post_meta( $post->ID, 'wpcd_server_init', true );
-		$wpcd_server_initial_app_name       = get_post_meta( $post->ID, 'wpcd_server_initial_app_name', true );
-		$wpcd_server_plugin_initial_version = get_post_meta( $post->ID, 'wpcd_server_plugin_initial_version', true );
-		$wpcd_server_plugin_updated_version = get_post_meta( $post->ID, 'wpcd_server_plugin_updated_version', true );
-		$wpcd_server_server_type            = get_post_meta( $post->ID, 'wpcd_server_server-type', true );
-		$wpcd_server_webserver_type         = get_post_meta( $post->ID, 'wpcd_server_webserver_type', true );
-		$wpcd_server_initial_app_name       = get_post_meta( $post->ID, 'wpcd_server_initial_app_name', true );
+		// Fetch all post meta in a single query.
+		$_m = get_post_meta( $post->ID );
+		$_mv = function( $key, $default = '' ) use ( $_m ) {
+			return isset( $_m[ $key ][0] ) ? $_m[ $key ][0] : $default;
+		};
+		$_ma = function( $key ) use ( $_m ) {
+			$val = isset( $_m[ $key ][0] ) ? maybe_unserialize( $_m[ $key ][0] ) : array();
+			return is_array( $val ) ? $val : array();
+		};
 
-		$wpcd_server_action_status              = get_post_meta( $post->ID, 'wpcd_server_action_status', true );
-		$wpcd_server_action                     = get_post_meta( $post->ID, 'wpcd_server_action', true );
-		$wpcd_server_after_create_action_app_id = get_post_meta( $post->ID, 'wpcd_server_after_create_action_app_id', true );
-		$wpcd_server_command_mutex              = get_post_meta( $post->ID, 'wpcd_command_mutex', true );  // Notice the lack of "server" in this post meta field.
-		$wpcd_server_last_upgrade_done          = get_post_meta( $post->ID, 'wpcd_last_upgrade_done', true ); // Notice the lack of "server" in this post meta field.
+		$wpcd_server_region               = $_mv( 'wpcd_server_region' );
+		$wpcd_server_size                 = $_mv( 'wpcd_server_size' );
+		$wpcd_server_size_raw             = $_mv( 'wpcd_server_size_raw' );
+		$wpcd_server_ipv4                 = $_mv( 'wpcd_server_ipv4' );
+		$wpcd_server_ipv6                 = $_mv( 'wpcd_server_ipv6' );
+		$wpcd_server_name                 = $_mv( 'wpcd_server_name' );
+		$wpcd_server_wc_order_id          = $_mv( 'wpcd_server_wc_order_id' );
+		$wpcd_server_provider             = $_mv( 'wpcd_server_provider' );
+		$wpcd_server_provider_instance_id = $_mv( 'wpcd_server_provider_instance_id' );
+		$wpcd_server_created              = $_mv( 'wpcd_server_created' );
+		$wpcd_server_parent_post_id       = $_mv( 'wpcd_server_parent_post_id' );
+		$wpcd_server_scripts_version      = $_mv( 'wpcd_server_scripts_version' );
+		$wpcd_server_init                   = $_mv( 'wpcd_server_init' );
+		$wpcd_server_initial_app_name       = $_mv( 'wpcd_server_initial_app_name' );
+		$wpcd_server_plugin_initial_version = $_mv( 'wpcd_server_plugin_initial_version' );
+		$wpcd_server_plugin_updated_version = $_mv( 'wpcd_server_plugin_updated_version' );
+		$wpcd_server_server_type            = $_mv( 'wpcd_server_server-type' );
+		$wpcd_server_webserver_type         = $_mv( 'wpcd_server_webserver_type' );
+		$wpcd_server_action_status              = $_mv( 'wpcd_server_action_status' );
+		$wpcd_server_action                     = $_mv( 'wpcd_server_action' );
+		$wpcd_server_after_create_action_app_id = $_mv( 'wpcd_server_after_create_action_app_id' );
+		$wpcd_server_command_mutex              = $_mv( 'wpcd_command_mutex' );
+		$wpcd_server_last_upgrade_done          = $_mv( 'wpcd_last_upgrade_done' );
 
 		/* The deferred action field is an array/serialized read-only field */
-		$wpcd_server_last_deferred_action_source = get_post_meta( $post->ID, 'wpcd_server_last_deferred_action_source', true );
+		$wpcd_server_last_deferred_action_source = $_ma( 'wpcd_server_last_deferred_action_source' );
 		if ( ! empty( $wpcd_server_last_deferred_action_source ) && is_array( $wpcd_server_last_deferred_action_source ) ) {
 			$wpcd_server_last_deferred_action_source_string = '';
 			foreach ( $wpcd_server_last_deferred_action_source as $key => $value ) {
@@ -1433,7 +1441,7 @@ class WPCD_POSTS_APP_SERVER extends WPCD_Posts_Base {
 
 		$filter_action = sanitize_text_field( filter_input( INPUT_GET, 'filter_action', FILTER_UNSAFE_RAW ) );
 
-		if ( ( ( is_admin() && $query->is_main_query() && $pagenow == 'edit.php' ) || wpcd_is_public_servers_list_query( $query ) ) && $query->query['post_type'] == 'wpcd_app_server' && ! wpcd_is_admin() ) {
+		if ( ( ( is_admin() && $query->is_main_query() && 'edit.php' === $pagenow ) || wpcd_is_public_servers_list_query( $query ) ) && isset( $query->query['post_type'] ) && 'wpcd_app_server' === $query->query['post_type'] && ! wpcd_is_admin() ) {
 			$qv          = &$query->query_vars;
 			$post_status = sanitize_text_field( filter_input( INPUT_GET, 'post_status', FILTER_UNSAFE_RAW ) );
 			$post_status = ! empty( $post_status ) ? $post_status : 'private';
@@ -2200,10 +2208,13 @@ class WPCD_POSTS_APP_SERVER extends WPCD_Posts_Base {
 		}
 
 		$args = array(
-			'post_type'      => 'wpcd_app_server',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app_server',
+			'post_status'            => 'any',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$server_ids = get_posts( $args );

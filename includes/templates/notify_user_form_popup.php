@@ -36,11 +36,13 @@ if ( is_user_logged_in() ) {
 	if ( '0' !== (string) $post_id ) {
 		// Check post_id in wpcd_notify_user.
 		$notify_args = array(
-			'post_type'      => 'wpcd_notify_user',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'p'              => $post_id,
-			'author'         => $current_user_id,
+			'post_type'              => 'wpcd_notify_user',
+			'post_status'            => 'private',
+			'posts_per_page'         => 1,
+			'p'                      => $post_id,
+			'author'                 => $current_user_id,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		);
 
 		$alert_found = get_posts( $notify_args );
