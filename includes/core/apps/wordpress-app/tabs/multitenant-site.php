@@ -2544,7 +2544,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 			// Tag does not yet exist in the array so add it.
 			$tags[ $new_tag ] = array(
 				'reporting_time'           => time(),
-				'reporting_time_human'     => date( 'Y-m-d H:i:s', time() ),
+				'reporting_time_human'     => gmdate( 'Y-m-d H:i:s' ),
 				'reporting_time_human_utc' => gmdate( 'Y-m-d H:i:s' ),
 				'desc'                     => $new_tag_desc,
 				'domain'                   => $domain,
@@ -2553,7 +2553,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 		} else {
 			// Perhaps update the time here? Or add other history?  We really shouldn't get here though.
 			$tags[ $new_tag ]['last_pull_reporting_time']           = time();
-			$tags[ $new_tag ]['last_pull_reporting_time_human']     = date( 'Y-m-d H:i:s', time() );
+			$tags[ $new_tag ]['last_pull_reporting_time_human']     = gmdate( 'Y-m-d H:i:s' );
 			$tags[ $new_tag ]['last_pull_reporting_time_human_utc'] = gmdate( 'Y-m-d H:i:s' );
 		}
 

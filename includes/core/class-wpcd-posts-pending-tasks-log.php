@@ -231,9 +231,9 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 
 			case 'wpcd_pending_task_start_date':
 			case 'wpcd_pending_task_complete_date':
-				$value = wp_kses_post( get_post_meta( $post_id, substr( $column_name, 5 ), true ) );
-				if ( ! empty( $value ) ) {
-					$value = date( date( 'Y-m-d @ H:i', $value ) );
+				$ts = (int) get_post_meta( $post_id, substr( $column_name, 5 ), true );
+				if ( $ts ) {
+					$value = gmdate( 'Y-m-d @ H:i', $ts );
 				}
 
 			default:

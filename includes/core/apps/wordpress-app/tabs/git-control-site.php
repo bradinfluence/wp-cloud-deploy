@@ -2706,7 +2706,7 @@ class WPCD_WORDPRESS_TABS_GIT_CONTROL_SITE extends WPCD_WORDPRESS_TABS {
 		$key          = wpcd_generate_uuid();
 		$logs[ $key ] = array(
 			'reporting_time'           => time(),
-			'reporting_time_human'     => date( 'Y-m-d H:i:s', time() ),
+			'reporting_time_human'     => gmdate( 'Y-m-d H:i:s' ),
 			'reporting_time_human_utc' => gmdate( 'Y-m-d H:i:s' ),
 			'msg'                      => $msg,
 		);
@@ -2769,14 +2769,14 @@ class WPCD_WORDPRESS_TABS_GIT_CONTROL_SITE extends WPCD_WORDPRESS_TABS {
 			// Tag does not yet exist in the array so add it.
 			$tags[ $new_tag ] = array(
 				'reporting_time'           => time(),
-				'reporting_time_human'     => date( 'Y-m-d H:i:s', time() ),
+				'reporting_time_human'     => gmdate( 'Y-m-d H:i:s' ),
 				'reporting_time_human_utc' => gmdate( 'Y-m-d H:i:s' ),
 				'desc'                     => $new_tag_desc,
 			);
 		} else {
 			// Perhaps update the time here? Or add other history?
 			$tags[ $new_tag ]['last_pull_reporting_time']           = time();
-			$tags[ $new_tag ]['last_pull_reporting_time_human']     = date( 'Y-m-d H:i:s', time() );
+			$tags[ $new_tag ]['last_pull_reporting_time_human']     = gmdate( 'Y-m-d H:i:s' );
 			$tags[ $new_tag ]['last_pull_reporting_time_human_utc'] = gmdate( 'Y-m-d H:i:s' );
 		}
 

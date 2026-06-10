@@ -2071,7 +2071,7 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 				return;
 			}
 
-			if ( count( $posts ) == 0 ) {
+			if ( 0 === count( $posts ) ) {
 				return '';
 			}
 

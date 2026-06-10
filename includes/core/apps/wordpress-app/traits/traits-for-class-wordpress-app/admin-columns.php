@@ -81,7 +81,7 @@ trait wpcd_wpapp_admin_column_data {
 				$old_logs[] = sprintf( '<option value="">%s</option>', __( 'Show Old Logs', 'wpcd' ) );
 				foreach ( $buttons as $slug ) {
 					$attr       = explode( ':', $slug );
-					$time       = date( get_option( 'date_format' ), intval( $attr[1] ) );
+					$time       = wp_date( get_option( 'date_format' ), intval( $attr[1] ) );
 					$old_logs[] = sprintf( '<option value="%s" title="%s" data-wpcd-id="%d" data-wpcd-name="%s">%s</option>', $slug, sprintf( __( 'Executed on %s', 'wpcd' ), $time ), $id, $slug, $attr[0] );
 				}
 				// add an empty anchor tag which will effectively trigger the pop-up.
@@ -1408,7 +1408,7 @@ trait wpcd_wpapp_admin_column_data {
 						$return .= __( 'Disk Free: ', 'wpcd' ) . $freepct . '%';
 
 						if ( isset( $server_status_items['reporting_time'] ) ) {
-							$return .= '<br />' . __( 'As of: ', 'wpcd' ) . date( 'Y-m-d @ H:i', $server_status_items['reporting_time'] );
+							$return .= '<br />' . __( 'As of: ', 'wpcd' ) . gmdate( 'Y-m-d @ H:i', (int) $server_status_items['reporting_time'] );
 						}
 
 						// Now we want to wrap the value in a class so we can style it.  The class name will vary based on the value of the free disk space.
@@ -1630,7 +1630,7 @@ trait wpcd_wpapp_admin_column_data {
 					if ( isset( $site_status_items['reporting_time'] ) ) {
 						// $return .= '<br />' . __( 'As of: ', 'wpcd' ) . date( 'Y-m-d @ H:i', $site_status_items['reporting_time'] );
 						// $return .= __( 'As of: ', 'wpcd' ) . date( 'Y-m-d @ H:i', $site_status_items['reporting_time'] );
-						$return .= date( 'Y-m-d @ H:i', $site_status_items['reporting_time'] );
+						$return .= gmdate( 'Y-m-d @ H:i', (int) $site_status_items['reporting_time'] );
 
 						// Now we want to wrap the value in a class so we can style it.
 						$class = 'wpcd_site_update_reporting_time';

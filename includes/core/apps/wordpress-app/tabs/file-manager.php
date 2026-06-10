@@ -465,7 +465,7 @@ class WPCD_WORDPRESS_TABS_FILE_MANAGER extends WPCD_WORDPRESS_TABS {
 				'desc'       => '',
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#username-for-file-manager', '#password-for-file-manager' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#username-for-file-manager', '#password-for-file-manager' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'install-tinyfilemanager',
 					// the id.
@@ -578,7 +578,7 @@ class WPCD_WORDPRESS_TABS_FILE_MANAGER extends WPCD_WORDPRESS_TABS {
 				'desc'       => '',
 				'attributes' => array(
 					// Get User Name & Password.
-					'data-wpcd-fields'              => json_encode( array( '#username-for-file-manager', '#password-for-file-manager' ) ),
+					'data-wpcd-fields'              => wp_json_encode( array( '#username-for-file-manager', '#password-for-file-manager' ) ),
 					// the _action that will be called in ajax.
 					'data-wpcd-action'              => 'change-auth-tinyfilemanager',
 					// the id.

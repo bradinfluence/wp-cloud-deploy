@@ -302,7 +302,7 @@ class WPCD_WORDPRESS_TABS_SERVER_TOOLS extends WPCD_WORDPRESS_TABS {
 				'confirmation_prompt' => $confirmation_prompt,
 				'desc'                => '',
 				// fields that contribute data for this action.
-				'data-wpcd-fields'    => json_encode( array( '#wpcd_app_action_reset-server-default-php-version-select' ) ),
+				'data-wpcd-fields'    => wp_json_encode( array( '#wpcd_app_action_reset-server-default-php-version-select' ) ),
 			),
 			'type'           => 'button',
 		);

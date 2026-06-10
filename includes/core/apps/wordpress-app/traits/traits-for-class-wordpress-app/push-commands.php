@@ -108,7 +108,7 @@ trait wpcd_wpapp_push_commands {
 
 		// Finally, add the time reported to the array.
 		$server_status_items['reporting_time']       = time();
-		$server_status_items['reporting_time_human'] = date( 'Y-m-d H:i:s', time() );
+		$server_status_items['reporting_time_human'] = gmdate( 'Y-m-d H:i:s' );
 
 		// Stamp the server record with the array.
 		if ( 'wpcd_app_server' === get_post_type( $id ) ) {
@@ -218,7 +218,7 @@ trait wpcd_wpapp_push_commands {
 
 		// Finally, add the time reported to the array.
 		$sites_status_items['reporting_time']       = time();
-		$sites_status_items['reporting_time_human'] = date( 'Y-m-d H:i:s', time() );
+		$sites_status_items['reporting_time_human'] = gmdate( 'Y-m-d H:i:s' );
 
 		// Locate the site post id(appid) based on a combination of the domain name and the server ip address.
 		$app_id = $this->get_app_id_by_server_id_and_domain( $id, $sites_status_items['domain'] );
@@ -422,7 +422,7 @@ trait wpcd_wpapp_push_commands {
 
 		// Finally, add the time reported to the array.
 		$aptget_status_items['reporting_time']       = time();
-		$aptget_status_items['reporting_time_human'] = date( 'Y-m-d H:i:s', time() );
+		$aptget_status_items['reporting_time_human'] = gmdate( 'Y-m-d H:i:s' );
 
 		// Stamp the server record with the array.
 		if ( 'wpcd_app_server' === get_post_type( $id ) ) {
@@ -556,7 +556,7 @@ trait wpcd_wpapp_push_commands {
 
 		// Add the time reported to the array.
 		$maldet_scan_items['reporting_time']       = time();
-		$maldet_scan_items['reporting_time_human'] = date( 'Y-m-d H:i:s', time() );
+		$maldet_scan_items['reporting_time_human'] = gmdate( 'Y-m-d H:i:s' );
 
 		// Stamp the server record with the array.
 		if ( 'wpcd_app_server' === get_post_type( $id ) ) {
@@ -707,7 +707,7 @@ trait wpcd_wpapp_push_commands {
 
 		// Add the time reported to the array.
 		$monit_log_items['reporting_time']       = time();
-		$monit_log_items['reporting_time_human'] = date( 'Y-m-d H:i:s', time() );
+		$monit_log_items['reporting_time_human'] = gmdate( 'Y-m-d H:i:s' );
 
 		// Stamp the server record with the array.
 		if ( 'wpcd_app_server' === get_post_type( $id ) ) {

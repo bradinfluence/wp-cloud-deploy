@@ -448,7 +448,7 @@ class WPCD_POSTS_TEAM {
 		$get_teams_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE team_id = %d AND user_id = %d AND permission_type_id = %d", array( $team_id, $user_id, $permission_type_id ) );
 		$results       = $wpdb->get_results( $get_teams_sql );
 
-		if ( count( $results ) == 0 ) {
+		if ( 0 === count( $results ) ) {
 			// Insert if no such record found.
 			$wpdb->insert(
 				$wpdb->prefix . 'permission_assignments',
@@ -461,7 +461,7 @@ class WPCD_POSTS_TEAM {
 			);
 		} else {
 			foreach ( $results as $row ) {
-				if ( $row->granted == 0 ) {
+				if ( 0 === (int) $row->granted ) {
 					$wpdb->update(
 						$wpdb->prefix . 'permission_assignments',
 						array(
@@ -563,7 +563,7 @@ class WPCD_POSTS_TEAM {
 
 		$screen = get_current_screen();
 
-		if ( $screen->post_type == 'wpcd_team' && isset( $_GET['action'] ) && $_GET['action'] == 'edit' && ! wpcd_is_admin() ) {
+		if ( 'wpcd_team' === $screen->post_type && isset( $_GET['action'] ) && 'edit' === sanitize_key( $_GET['action'] ) && ! wpcd_is_admin() ) {
 
 			if ( ! current_user_can( 'wpcd_manage_teams' ) ) {
 				wp_die( esc_html( __( 'You don\'t have access to this page.', 'wpcd' ) ) );
@@ -589,7 +589,7 @@ class WPCD_POSTS_TEAM {
 	 */
 	public function wpcd_team_custom_view_count( $views ) {
 		global $current_screen;
-		if ( $current_screen->id == 'edit-wpcd_team' && ! wpcd_is_admin() ) {
+		if ( 'edit-wpcd_team' === $current_screen->id && ! wpcd_is_admin() ) {
 			$views = $this->wpcd_team_manipulate_views( 'wpcd_team', $views );
 		}
 		return $views;
@@ -710,11 +710,11 @@ class WPCD_POSTS_TEAM {
 		$app_posts    = array();
 
 		foreach ( $posts as $post ) {
-			if ( get_post_type( $post ) == 'wpcd_app_server' ) {
+			if ( 'wpcd_app_server' === get_post_type( $post ) ) {
 				$server_posts[] = $post;
 			}
 
-			if ( get_post_type( $post ) == 'wpcd_app' ) {
+			if ( 'wpcd_app' === get_post_type( $post ) ) {
 				$app_posts[] = $post;
 			}
 		}

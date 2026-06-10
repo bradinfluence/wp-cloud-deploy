@@ -315,7 +315,7 @@ class WPCD_WORDPRESS_TABS_STATISTICS extends WPCD_WORDPRESS_TABS {
 		$result = wpcd_get_last_lines_from_string( trim( $result ), 3, '<br />' );
 
 		// update the data...
-		update_post_meta( $id, 'wpapp_diskspace_used', $result . '<br />Last calculated on ' . date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) );
+		update_post_meta( $id, 'wpapp_diskspace_used', $result . '<br />Last calculated on ' . gmdate( 'Y-m-d H:i:s' ) );
 
 		// Return the data as an error so it can be shown in a dialog box.
 		return new \WP_Error( sprintf( __( '%s', 'wpcd' ), $result ) );

@@ -1433,7 +1433,7 @@ class WPCD_POSTS_APP_SERVER extends WPCD_Posts_Base {
 
 		$filter_action = sanitize_text_field( filter_input( INPUT_GET, 'filter_action', FILTER_UNSAFE_RAW ) );
 
-		if ( ( ( is_admin() && $query->is_main_query() && $pagenow == 'edit.php' ) || wpcd_is_public_servers_list_query( $query ) ) && $query->query['post_type'] == 'wpcd_app_server' && ! wpcd_is_admin() ) {
+		if ( ( ( is_admin() && $query->is_main_query() && 'edit.php' === $pagenow ) || wpcd_is_public_servers_list_query( $query ) ) && isset( $query->query['post_type'] ) && 'wpcd_app_server' === $query->query['post_type'] && ! wpcd_is_admin() ) {
 			$qv          = &$query->query_vars;
 			$post_status = sanitize_text_field( filter_input( INPUT_GET, 'post_status', FILTER_UNSAFE_RAW ) );
 			$post_status = ! empty( $post_status ) ? $post_status : 'private';
