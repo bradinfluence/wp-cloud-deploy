@@ -370,7 +370,7 @@ class WPCD_POSTS_LOG extends WPCD_Posts_Base {
 			wp_send_json_error( array( 'msg' => __( 'You are not authorized to perform this action - purge logs.', 'wpcd' ) ) );
 		}
 
-		$post_type   = sanitize_text_field( $_POST['params']['post_type'] );
+		$post_type   = isset( $_POST['params']['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['params']['post_type'] ) ) : '';
 		$count_posts = wp_count_posts( $post_type );
 
 		if ( $count_posts ) {
@@ -425,7 +425,7 @@ class WPCD_POSTS_LOG extends WPCD_Posts_Base {
 			wp_send_json_error( array( 'msg' => __( 'You are not authorized to perform this action - purge logs.', 'wpcd' ) ) );
 		}
 
-		$post_type   = sanitize_text_field( $_POST['params']['post_type'] );
+		$post_type   = isset( $_POST['params']['post_type'] ) ? sanitize_text_field( wp_unslash( $_POST['params']['post_type'] ) ) : '';
 		$count_posts = wp_count_posts( $post_type );
 
 		if ( $count_posts ) {

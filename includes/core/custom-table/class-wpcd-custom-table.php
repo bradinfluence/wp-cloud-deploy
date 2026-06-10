@@ -610,10 +610,10 @@ abstract class WPCD_MB_Custom_Table {
 				
 				printf(
 					'<a href="#" data-id="%d" data-model="%s" data-nonce="%s" data-view="%s" id="wpcd-mbct-delete">' . esc_html__( 'Delete', 'mb-custom-table' ) . '</a>',
-					rwmb_request()->get('model-id'),
-					$this->model->name,
-					$this->get_nonce('delete'),
-					$this->get_view()
+					absint( rwmb_request()->get( 'model-id' ) ),
+					esc_attr( $this->model->name ),
+					esc_attr( $this->get_nonce( 'delete' ) ),
+					esc_attr( $this->get_view() )
 				);
 				
 			}
