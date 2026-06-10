@@ -64,6 +64,7 @@ trait wpcd_metaboxes_for_teams_for_servers_and_apps {
 					'query_args'  => array(
 						'post_status'    => 'private',
 						'posts_per_page' => -1,
+						'no_found_rows'  => true,
 					),
 				),
 			),

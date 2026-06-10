@@ -14,12 +14,14 @@ if ( is_user_logged_in() ) {
 	// Get user notification alerts data.
 	$user_notify_posts = get_posts(
 		array(
-			'post_type'   => 'wpcd_notify_user',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'author'      => $current_user_id,
+			'post_type'              => 'wpcd_notify_user',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'author'                 => $current_user_id,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		)
 	);
 

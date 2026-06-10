@@ -566,10 +566,12 @@ class WPCD_Server extends WPCD_Base {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app_server',
-				'post_status' => 'private',
-				'numberposts' => -1,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app_server',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'meta_query'             => array(
 					array(
 						'key'   => 'wpcd_server_provider_instance_id',
 						'value' => $instance_id,

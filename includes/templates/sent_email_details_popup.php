@@ -7,10 +7,13 @@
 
 // Check post_id in wpcd_notify_user.
 $entry_args = array(
-	'post_type'      => 'wpcd_sent_emails',
-	'post_status'    => 'private',
-	'posts_per_page' => -1,
-	'p'              => $post_id,
+	'post_type'              => 'wpcd_sent_emails',
+	'post_status'            => 'private',
+	'posts_per_page'         => 1,
+	'p'                      => $post_id,
+	'no_found_rows'          => true,
+	'update_post_meta_cache' => false,
+	'update_post_term_cache' => false,
 );
 
 $entry_found = get_posts( $entry_args );
