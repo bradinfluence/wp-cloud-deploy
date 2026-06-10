@@ -347,12 +347,14 @@ class WPCD_NOTIFY_SENT extends WPCD_POSTS_LOG {
 
 		// Create query to get new notifications.
 		$notify_args = array(
-			'post_type'   => 'wpcd_notify_log',
-			'post_status' => 'private',
-			'numberposts' => 10,
-			'orderby'     => 'date',
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_notify_log',
+			'post_status'            => 'private',
+			'numberposts'            => 10,
+			'orderby'                => 'date',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'notification_sent',
 					'value'   => 0,
@@ -366,6 +368,29 @@ class WPCD_NOTIFY_SENT extends WPCD_POSTS_LOG {
 
 		// Start looping through the notifications.
 		if ( ! empty( $notify_logs ) ) {
+			// Prime parent post meta caches to avoid N+1 queries in the loop below.
+			$parent_ids = array_filter( array_unique( array_map(
+				static function( $log ) {
+					return (int) get_post_meta( $log->ID, 'parent_post_id', true );
+				},
+				$notify_logs
+			) ) );
+			if ( $parent_ids ) {
+				_prime_post_caches( $parent_ids, false, true );
+				// For app parents, also prime the server post meta.
+				$server_ids = array();
+				foreach ( $parent_ids as $pid ) {
+					if ( 'wpcd_app_server' !== get_post_type( $pid ) ) {
+						$sid = (int) get_post_meta( $pid, 'parent_post_id', true );
+						if ( $sid ) {
+							$server_ids[] = $sid;
+						}
+					}
+				}
+				if ( $server_ids ) {
+					_prime_post_caches( array_unique( $server_ids ), false, true );
+				}
+			}
 			foreach ( $notify_logs as $notify_key => $notify_value ) {
 				$notify_log_id      = $notify_value->ID;
 				$notify_log_created = $notify_value->post_date;

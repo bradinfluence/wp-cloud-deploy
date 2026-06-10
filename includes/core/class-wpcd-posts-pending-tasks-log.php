@@ -962,12 +962,14 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 		$compare_date = time() - ( 3600 * 2 );
 
 		$pending_logs_args = array(
-			'post_type'   => 'wpcd_pending_log',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_pending_log',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'     => 'pending_task_state',
@@ -1294,13 +1296,16 @@ class WPCD_PENDING_TASKS_LOG extends WPCD_POSTS_LOG {
 		$compare_time = time() - ( 15 * MINUTE_IN_SECONDS );
 
 		$pending_task_args = array(
-			'post_type'   => 'wpcd_pending_log',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'fields'      => 'ids',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_pending_log',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				'relation' => 'AND',
 				array(
 					'key'     => 'pending_task_state',

@@ -1152,10 +1152,12 @@ class WP_CLOUD_DEPLOY {
 	public function setup_virtual_cloud_provider( $provider, $provider_paths ) {
 
 		$args = array(
-			'post_type'      => 'wpcd_cloud_provider',
-			'posts_per_page' => -1,
-			'meta_key'       => 'wpcd_cloud_provider_slug',
-			'meta_value'     => $provider,
+			'post_type'              => 'wpcd_cloud_provider',
+			'posts_per_page'         => 1,
+			'meta_key'               => 'wpcd_cloud_provider_slug',
+			'meta_value'             => $provider,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		);
 
 		$post = get_posts( $args );

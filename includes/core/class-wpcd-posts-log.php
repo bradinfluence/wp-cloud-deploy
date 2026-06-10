@@ -383,11 +383,13 @@ class WPCD_POSTS_LOG extends WPCD_Posts_Base {
 			// Get posts sorted by date in descending order and limit to the max setting above.
 			$posts_to_delete = get_posts(
 				array(
-					'orderby'        => 'date',
-					'order'          => 'ASC',
-					'post_type'      => $post_type,
-					'posts_per_page' => -1,
-					'post_status'    => 'any',
+					'orderby'                => 'date',
+					'order'                  => 'ASC',
+					'post_type'              => $post_type,
+					'posts_per_page'         => -1,
+					'post_status'            => 'any',
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -438,12 +440,14 @@ class WPCD_POSTS_LOG extends WPCD_Posts_Base {
 			// Get posts sorted by date in descending order and limit to the max setting above.
 			$posts_to_delete = get_posts(
 				array(
-					'orderby'        => 'date',
-					'order'          => 'ASC',
-					'post_type'      => $post_type,
-					'posts_per_page' => -1,
-					'post_status'    => 'any',
-					'meta_query'     => array(
+					'orderby'                => 'date',
+					'order'                  => 'ASC',
+					'post_type'              => $post_type,
+					'posts_per_page'         => -1,
+					'post_status'            => 'any',
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						array(
 							'key'     => 'notification_sent',
 							'value'   => 1,

@@ -905,20 +905,23 @@ class WPCD_WORDPRESS_TABS_BACKUP extends WPCD_WORDPRESS_TABS {
 		$sites = array();
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_app',
-				'post_status' => 'private',
-				'numberposts' => 300,
-				'meta_query'  => array(
+				'post_type'              => 'wpcd_app',
+				'post_status'            => 'private',
+				'numberposts'            => 300,
+				'meta_query'             => array(
 					array(
 						'key'   => 'wpcd_server_initial_app_name',
 						'value' => $this->get_app_name(),
 					),
 				),
-				'fields'      => 'ids',
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 
 		if ( $posts ) {
+			update_postmeta_cache( $posts );
 			foreach ( $posts as $id ) {
 				$sites[ $id ] = get_post_meta( $id, 'wpapp_domain', true );
 			}
