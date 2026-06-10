@@ -1004,6 +1004,7 @@ class WPCD_WORDPRESS_TABS_SITE_SYNC extends WPCD_WORDPRESS_TABS {
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 				'post__in'       => empty( $post__in ) ? array( -1 ) : $post__in,
+				'no_found_rows'  => true,
 			),
 			'attributes'  => array(
 				// the key of the field (the key goes in the request).

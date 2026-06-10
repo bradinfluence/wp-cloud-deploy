@@ -1675,12 +1675,14 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Check entry_id in wpcd_sent_emails.
 		$sent_email_args = array(
-			'post_type'   => 'wpcd_sent_emails',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'orderby'     => 'date',
-			'order'       => 'DESC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_sent_emails',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'orderby'                => 'date',
+			'order'                  => 'DESC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_sent_email_parent_id',
 					'value'   => $parent_id,

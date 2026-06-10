@@ -1917,6 +1917,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 				'post__in'       => empty( $destination_servers ) ? array( -1 ) : $destination_servers,
+				'no_found_rows'  => true,
 			),
 			'save_field' => false,
 			'attributes' => array(
@@ -2253,6 +2254,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				'posts_per_page' => -1,
 				'meta_key'       => 'wpcd_is_template_site',
 				'meta_value'     => '1',
+				'no_found_rows'  => true,
 			),
 			'save_field'  => false,
 			'attributes'  => array(

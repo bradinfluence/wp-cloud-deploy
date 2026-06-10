@@ -603,10 +603,14 @@ class WPCD_Server extends WPCD_Base {
 	public function get_app_count( $post_id ) {
 
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => 9999,
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => 9999,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'   => 'parent_post_id',
 					'value' => $post_id,
@@ -614,15 +618,7 @@ class WPCD_Server extends WPCD_Base {
 			),
 		);
 
-		$posts = get_posts( $args );
-
-		$cnt_posts = 0;
-
-		if ( ! empty( $posts ) ) {
-			$cnt_posts = count( $posts );
-		}
-
-		return $cnt_posts;
+		return count( get_posts( $args ) );
 
 	}
 
@@ -636,10 +632,12 @@ class WPCD_Server extends WPCD_Base {
 	public function get_apps_by_server_id( $server_id ) {
 
 		$args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => 9999,
-			'meta_query'     => array(
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => 9999,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'   => 'parent_post_id',
 					'value' => $server_id,
@@ -647,9 +645,7 @@ class WPCD_Server extends WPCD_Base {
 			),
 		);
 
-		$posts = get_posts( $args );
-
-		return $posts;
+		return get_posts( $args );
 
 	}
 

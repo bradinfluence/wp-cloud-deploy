@@ -358,11 +358,13 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_get_permissions( $object_type, $only_ids = false ) {
 
 		$args = array(
-			'post_type'   => 'wpcd_permission_type',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_permission_type',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_object_type',
 					'value'   => $object_type,
@@ -400,11 +402,13 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_get_permission_groups( $group, $only_ids = false ) {
 
 		$args = array(
-			'post_type'   => 'wpcd_permission_type',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'order'       => 'ASC',
-			'meta_query'  => array(
+			'post_type'              => 'wpcd_permission_type',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+			'meta_query'             => array(
 				array(
 					'key'     => 'wpcd_permission_group',
 					'value'   => $group,
@@ -696,25 +700,30 @@ class WPCD_POSTS_TEAM {
 	 */
 	public function render_team_details_meta_box( $post ) {
 		$args = array(
-			'post_type'    => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status'  => 'private',
-			'meta_key'     => 'wpcd_assigned_teams',
-			'meta_value'   => $post->ID,
-			'meta_compare' => 'IN',
-			'numberposts'  => -1,
-			'fields'       => 'ids',
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'meta_key'               => 'wpcd_assigned_teams',
+			'meta_value'             => $post->ID,
+			'meta_compare'           => 'IN',
+			'numberposts'            => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$posts        = get_posts( $args );
 		$server_posts = array();
 		$app_posts    = array();
 
+		if ( $posts ) {
+			_prime_post_caches( $posts, false, false );
+		}
 		foreach ( $posts as $post ) {
-			if ( 'wpcd_app_server' === get_post_type( $post ) ) {
+			$post_type = get_post_type( $post );
+			if ( 'wpcd_app_server' === $post_type ) {
 				$server_posts[] = $post;
-			}
-
-			if ( 'wpcd_app' === get_post_type( $post ) ) {
+			} elseif ( 'wpcd_app' === $post_type ) {
 				$app_posts[] = $post;
 			}
 		}
@@ -908,13 +917,16 @@ class WPCD_POSTS_TEAM {
 		if ( is_admin() && 'wpcd_team' === get_post_type( $post_id ) ) {
 			$posts = get_posts(
 				array(
-					'post_type'    => array( 'wpcd_app_server', 'wpcd_app' ),
-					'post_status'  => 'private',
-					'meta_key'     => 'wpcd_assigned_teams',
-					'meta_value'   => $post_id,
-					'meta_compare' => 'IN',
-					'numberposts'  => -1,
-					'fields'       => 'ids',
+					'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+					'post_status'            => 'private',
+					'meta_key'               => 'wpcd_assigned_teams',
+					'meta_value'             => $post_id,
+					'meta_compare'           => 'IN',
+					'numberposts'            => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
@@ -974,16 +986,22 @@ class WPCD_POSTS_TEAM {
 	public function wpcd_team_user_profile_section( $user ) {
 
 		$args = array(
-			'post_type'   => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'fields'      => 'ids',
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$posts        = get_posts( $args );
 		$server_posts = array();
 		$app_posts    = array();
 
+		if ( $posts ) {
+			_prime_post_caches( $posts, false, false );
+		}
 		foreach ( $posts as $post ) {
 
 			$post_type = get_post_type( $post );

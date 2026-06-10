@@ -31,16 +31,16 @@ function wpcd_get_child_posts( $post_type, $post_id ) {
 	}
 
 	$args = array(
-		'post_type'      => $post_type,
-		'meta_key'       => 'parent_post_id',
-		'meta_value'     => $post_id,
-		'posts_per_page' => 9999,
-		'post_status'    => 'any',
+		'post_type'              => $post_type,
+		'meta_key'               => 'parent_post_id',
+		'meta_value'             => $post_id,
+		'posts_per_page'         => 9999,
+		'post_status'            => 'any',
+		'no_found_rows'          => true,
+		'update_post_term_cache' => false,
 	);
 
-	$posts = get_posts( $args );
-
-	return $posts;
+	return get_posts( $args );
 }
 
 
