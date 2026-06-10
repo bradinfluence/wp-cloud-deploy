@@ -143,13 +143,13 @@ class WPCD_POSTS_CLOUD_PROVIDER extends WPCD_Posts_Base {
 					$checked     = __( 'checked', 'wpcd' );
 					$status_text = __( 'ACTIVE', 'wpcd' );
 				}
-				$value = '<label class="wpcd_provider_active_switch"><input data-post_id="' . $post_id . '" class="wpcd_active_provider" data-action="wpcd_provider_status_save" data-nonce="' . wp_create_nonce( 'wpcd-provider-status-save' ) . '" value="' . $active . '" type="checkbox" ' . $checked . '><span class="wpcd_provider_active_slider round" title="' . $status_text . '" ></span></label>';
+				$value = '<label class="wpcd_provider_active_switch"><input data-post_id="' . absint( $post_id ) . '" class="wpcd_active_provider" data-action="wpcd_provider_status_save" data-nonce="' . esc_attr( wp_create_nonce( 'wpcd-provider-status-save' ) ) . '" value="' . (int) $active . '" type="checkbox" ' . esc_attr( $checked ) . '><span class="wpcd_provider_active_slider round" title="' . esc_attr( $status_text ) . '" ></span></label>';
 				break;
 		}
 
 		$value = apply_filters( 'wpcd_cloud_provider_table_content', $value, $column_name, $post_id );
 
-		echo $value;
+		echo wp_kses_post( $value );
 	}
 
 	/**

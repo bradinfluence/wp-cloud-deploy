@@ -607,7 +607,7 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 		$user_login = $usermeta->data->user_login;
 
 		// check if data need to be added or whether we need to update an existing user.
-		if ( $post_id == 0 ) {
+		if ( 0 === (int) $post_id ) {
 			$post_title = '';
 			if ( empty( $profile_name ) ) {
 				$post_title = 'Submitted by ' . $user_login;
@@ -663,7 +663,7 @@ class WPCD_NOTIFY_USER extends WPCD_Posts_Base {
 			update_post_meta( $post_id, 'wpcd_notify_user_slack_webhooks', $slack_webhooks );
 			update_post_meta( $post_id, 'wpcd_notify_user_zapier_send', $send_to_zapier );
 
-			if ( $send_to_zapier == 1 ) {
+			if ( 1 === (int) $send_to_zapier ) {
 				update_post_meta( $post_id, 'wpcd_notify_user_zapier_webhooks', $zapier_webhooks );
 			}
 
