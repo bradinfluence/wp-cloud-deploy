@@ -2500,7 +2500,7 @@ class WPCD_Settings {
 
 		$table_name = $wpdb->prefix . 'wpcd_restore_files';
 
-		if ( 0 == $restricted_files ) {
+		if ( 0 === (int) $restricted_files ) {
 			$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE user_id = %d ORDER BY date_time DESC", array( $user_id ) );
 		} else {
 			$get_files_sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE user_id = %d ORDER BY date_time DESC LIMIT %d", array( $user_id, $restricted_files ) );

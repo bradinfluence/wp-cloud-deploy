@@ -252,8 +252,8 @@ class WPCD_POSTS_PERMISSION_TYPE {
 	 */
 	public function wpcd_permission_type_force_type_private( $post ) {
 
-		if ( $post['post_type'] == 'wpcd_permission_type' ) {
-			if ( $post['post_status'] != 'trash' && $post['post_status'] != 'auto-draft' && $post['post_status'] != 'draft' ) {
+		if ( 'wpcd_permission_type' === $post['post_type'] ) {
+			if ( 'trash' !== $post['post_status'] && 'auto-draft' !== $post['post_status'] && 'draft' !== $post['post_status'] ) {
 				$post['post_status'] = 'private';
 			}
 		}

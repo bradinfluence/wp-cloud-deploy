@@ -432,7 +432,7 @@ trait wpcd_metaboxes_for_taxonomies_for_servers_and_apps {
 			$clauses['where']  .= "AND (taxonomy = '" . $this->get_post_taxonomy() . "' OR taxonomy IS NULL)";
 			$clauses['groupby'] = 'object_id';
 			$clauses['orderby'] = "GROUP_CONCAT({$wpdb->terms}.name ORDER BY name ASC)";
-			if ( strtoupper( $wp_query->get( 'order' ) ) == 'ASC' ) {
+			if ( 'ASC' === strtoupper( $wp_query->get( 'order' ) ) ) {
 				$clauses['orderby'] .= 'ASC';
 			} else {
 				$clauses['orderby'] .= 'DESC';

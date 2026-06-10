@@ -529,7 +529,7 @@ class WPCD_POSTS_TEAM {
 
 		global $pagenow;
 
-		if ( is_admin() && $query->is_main_query() && $query->query['post_type'] == 'wpcd_team' && $pagenow == 'edit.php' && ! wpcd_is_admin() ) {
+		if ( is_admin() && $query->is_main_query() && isset( $query->query['post_type'] ) && 'wpcd_team' === $query->query['post_type'] && 'edit.php' === $pagenow && ! wpcd_is_admin() ) {
 
 			$qv              = &$query->query_vars;
 			$user_id         = get_current_user_id();

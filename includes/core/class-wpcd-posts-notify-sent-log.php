@@ -467,7 +467,7 @@ class WPCD_NOTIFY_SENT extends WPCD_POSTS_LOG {
 										}
 
 										// Send zapier notification to user.
-										if ( ! empty( $user_zapier_hooks ) && $user_zapier == '1' ) {
+										if ( ! empty( $user_zapier_hooks ) && '1' === (string) $user_zapier ) {
 											$this->wpcd_send_zapier_webhook_notifications_to_user( $alert_id, $notify_log_id, $user_zapier_hooks, $user_login, $alert_user_id, $alert_user_email, $notify_type, $notify_ref, $notify_message, $server_name, $domain_name, $date, $time, $server_id, $site_id, $first_name, $last_name, $ipv4, $provider );
 										}
 									}

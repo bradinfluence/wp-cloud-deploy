@@ -813,7 +813,7 @@ function wpcd_get_posts_by_permission( $permission_name, $post_type, $post_statu
 
 		$meta_key = 'wpcd_assigned_teams';
 
-		$post_status = ( $post_status == 'all' ) ? 'private' : $post_status;
+		$post_status = ( 'all' === $post_status ) ? 'private' : $post_status;
 
 		// To check if the user is in any team.
 		if ( count( $results ) ) {
@@ -1187,7 +1187,7 @@ function wpcd_check_user_is_team_manager( $user_id, $team_id = 0 ) {
  * @return array
  */
 function wpcd_get_team_manager_posts( $user_id, $post_status = 'private' ) {
-	$post_status = ( $post_status == 'all' ) ? 'private' : $post_status;
+	$post_status = ( 'all' === $post_status ) ? 'private' : $post_status;
 	$args        = array(
 		'post_type'   => 'wpcd_team',
 		'post_status' => $post_status,
@@ -1290,7 +1290,7 @@ function wpcd_can_current_user_delete_app( $post_id ) {
 	$post    = get_post( $post_id );
 
 	// do checks.
-	if ( ( $post->post_type == 'wpcd_app' && ! wpcd_user_can( $user_id, 'delete_app_record', $post->ID ) && $post->post_author != $user_id ) || ( $post->post_type == 'wpcd_app' && ! empty( $wpcd_app_delete_protection ) ) ) {
+	if ( ( 'wpcd_app' === $post->post_type && ! wpcd_user_can( $user_id, 'delete_app_record', $post->ID ) && (int) $post->post_author !== (int) $user_id ) || ( 'wpcd_app' === $post->post_type && ! empty( $wpcd_app_delete_protection ) ) ) {
 		return false;
 	} else {
 		return true;
