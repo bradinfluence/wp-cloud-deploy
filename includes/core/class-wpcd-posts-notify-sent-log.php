@@ -327,9 +327,11 @@ class WPCD_NOTIFY_SENT extends WPCD_POSTS_LOG {
 		// Get all posts of user notifications post type.
 		$user_alerts = get_posts(
 			array(
-				'post_type'   => 'wpcd_notify_user',
-				'post_status' => 'private',
-				'numberposts' => -1,
+				'post_type'              => 'wpcd_notify_user',
+				'post_status'            => 'private',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 

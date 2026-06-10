@@ -824,9 +824,11 @@ class WPCD_SYNC {
 
 		// Get SERVER and APP posts.
 		$args = array(
-			'post_type'   => array( 'wpcd_app_server', 'wpcd_app' ),
-			'post_status' => 'private',
-			'numberposts' => -1,
+			'post_type'              => array( 'wpcd_app_server', 'wpcd_app' ),
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		);
 
 		$posts = get_posts( $args );
@@ -910,9 +912,11 @@ class WPCD_SYNC {
 			// Get the team data.
 			$teams = get_posts(
 				array(
-					'post_type'   => 'wpcd_team',
-					'post_status' => 'private',
-					'numberposts' => -1,
+					'post_type'              => 'wpcd_team',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
 				)
 			);
 

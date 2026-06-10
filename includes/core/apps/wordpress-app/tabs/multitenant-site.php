@@ -1211,10 +1211,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 		switch ( $action ) {
 			case 'mt-upgrade-all-tenants':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1229,10 +1231,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				break;
 			case 'mt-upgrade-tenants-selected-versions':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1252,10 +1256,12 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 				break;
 			case 'mt-upgrade-tenants-selected-app-group':
 				$query_args = array(
-					'post_type'   => 'wpcd_app',
-					'post_status' => 'private',
-					'numberposts' => -1,
-					'meta_query'  => array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'numberposts'            => -1,
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+					'meta_query'             => array(
 						'relation' => 'AND',
 						array(
 							'key'   => 'wpcd_app_mt_parent',
@@ -1266,7 +1272,7 @@ class WPCD_WORDPRESS_TABS_MULTITENANT_SITE extends WPCD_WORDPRESS_TABS {
 							'value' => 'mt_tenant',
 						),
 					),
-					'tax_query'   => array(
+					'tax_query'              => array(
 						array(
 							'taxonomy' => 'wpcd_app_group',
 							'field'    => 'term_id',

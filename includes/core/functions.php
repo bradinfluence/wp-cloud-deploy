@@ -792,9 +792,11 @@ function wpcd_get_posts_by_permission( $permission_name, $post_type, $post_statu
 		// get all posts since user is an admin!
 		$posts = get_posts(
 			array(
-				'posts_per_page' => -1,
-				'post_type'      => $post_type,
-				'post_status'    => $post_status,
+				'posts_per_page'         => -1,
+				'post_type'              => $post_type,
+				'post_status'            => $post_status,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 	} else {
@@ -1148,10 +1150,13 @@ function wpcd_check_user_is_team_manager( $user_id, $team_id = 0 ) {
 		}
 	} else {
 		$args  = array(
-			'post_type'   => 'wpcd_team',
-			'post_status' => 'private',
-			'numberposts' => -1,
-			'fields'      => 'ids',
+			'post_type'              => 'wpcd_team',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$teams = get_posts( $args );
 
@@ -1189,10 +1194,13 @@ function wpcd_check_user_is_team_manager( $user_id, $team_id = 0 ) {
 function wpcd_get_team_manager_posts( $user_id, $post_status = 'private' ) {
 	$post_status = ( 'all' === $post_status ) ? 'private' : $post_status;
 	$args        = array(
-		'post_type'   => 'wpcd_team',
-		'post_status' => $post_status,
-		'numberposts' => -1,
-		'fields'      => 'ids',
+		'post_type'              => 'wpcd_team',
+		'post_status'            => $post_status,
+		'numberposts'            => -1,
+		'fields'                 => 'ids',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
 	$teams       = get_posts( $args );
 

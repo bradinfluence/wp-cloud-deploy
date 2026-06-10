@@ -270,11 +270,12 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 					// do nothing, only admins are allowed to see this data.
 				} else {
 					// Get server title.
-					$server_title = wp_kses_post( get_post( $server_post_id )->post_title );
+					$server_post   = get_post( $server_post_id );
+					$server_title  = wp_kses_post( $server_post->post_title );
 
 					// Show the server title - with a link if the user is able to edit it otherwise without the link.
 					$user_id = get_current_user_id();
-					if ( wpcd_user_can( $user_id, 'view_server', $server_post_id ) || get_post( $server_post_id )->post_author === $user_id ) {
+					if ( wpcd_user_can( $user_id, 'view_server', $server_post_id ) || $server_post->post_author === $user_id ) {
 						$display_name = sprintf( '<a href="%s">' . $server_title . '</a>', ( is_admin() ? get_edit_post_link( $server_post_id ) : get_permalink( $server_post_id ) ) );
 					} else {
 						$display_name = $server_title;
@@ -337,7 +338,7 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 					} else {
 						$value2 = $this->wpcd_column_wrap_string_with_span_and_class( __( 'IPv6: ', 'wpcd' ), 'ipv6', 'left' );
 					}
-					$get_ipv6 = $this->wpcd_column_wrap_string_with_span_and_class( $this->get_server_meta_value( $post_id, 'wpcd_server_ipv6' ), 'ipv6', 'right' );
+					$get_ipv6 = $this->wpcd_column_wrap_string_with_span_and_class( $ipv6, 'ipv6', 'right' );
 					if ( is_admin() ) {
 						$value2 .= wpcd_wrap_clipboard_copy( $get_ipv6 );
 					} else {
@@ -402,8 +403,9 @@ class WPCD_POSTS_APP extends WPCD_Posts_Base {
 				// Display the name of the owner who set up the server...
 				$server_post_id = get_post_meta( $post_id, 'parent_post_id', true );
 				$server_owner   = esc_html( get_user_by( 'ID', get_post( $server_post_id )->post_author )->user_login );
-				if ( ! empty( get_post( $post_id )->post_author ) ) {
-					$app_owner = esc_html( get_user_by( 'ID', get_post( $post_id )->post_author )->user_login );
+				$app_post       = get_post( $post_id );
+				if ( ! empty( $app_post->post_author ) ) {
+					$app_owner = esc_html( get_user_by( 'ID', $app_post->post_author )->user_login );
 				} else {
 					$app_owner = __( 'Unable to get author/owner', 'wpcd' );
 				}

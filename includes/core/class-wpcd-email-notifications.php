@@ -1137,9 +1137,12 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Check and get all the email address either for server or site.
 		$emails_args = array(
-			'post_type'   => 'wpcd_email_address',
-			'post_status' => 'private',
-			'numberposts' => -1,
+			'post_type'              => 'wpcd_email_address',
+			'post_status'            => 'private',
+			'numberposts'            => -1,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$post_type = get_post_type( $post_id );
@@ -1210,6 +1213,17 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 			if ( 'servers_apps_both_emails' === $send_to_emails ) {
 				// Check for bulk action.
+				// Get all the apps associated with the server.
+				$args = array(
+					'post_type'              => 'wpcd_app',
+					'post_status'            => 'private',
+					'posts_per_page'         => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				);
+
 				if ( 'wpcd_server_batch' === $post_type ) {
 					// Server or app ids.
 					$bulk_action_ids = get_post_meta( $post_id, 'wpcd_bulk_server_app_ids', true );
@@ -1232,14 +1246,6 @@ class WPCD_EMAIL_NOTIFICATIONS {
 						),
 					);
 				}
-
-				// Get all the apps associated with the server.
-				$args = array(
-					'post_type'      => 'wpcd_app',
-					'post_status'    => 'private',
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				);
 
 				$app_ids = get_posts( $args );
 				if ( ! empty( $app_ids ) ) {
@@ -1509,19 +1515,25 @@ class WPCD_EMAIL_NOTIFICATIONS {
 
 		// Get all servers.
 		$server_args = array(
-			'post_type'      => 'wpcd_app_server',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app_server',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$server_ids  = get_posts( $server_args );
 
 		// Get all apps.
 		$app_args = array(
-			'post_type'      => 'wpcd_app',
-			'post_status'    => 'private',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+			'post_type'              => 'wpcd_app',
+			'post_status'            => 'private',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$app_ids  = get_posts( $app_args );
 

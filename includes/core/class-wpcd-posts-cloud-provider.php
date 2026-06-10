@@ -282,10 +282,13 @@ class WPCD_POSTS_CLOUD_PROVIDER extends WPCD_Posts_Base {
 		$provider_active = filter_input( INPUT_POST, 'provider_active', FILTER_SANITIZE_NUMBER_INT );
 
 		$provider_args = array(
-			'post_type'      => 'wpcd_cloud_provider',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'p'              => $post_id,
+			'post_type'              => 'wpcd_cloud_provider',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'p'                      => $post_id,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		$provider_found = get_posts( $provider_args );
@@ -595,9 +598,11 @@ class WPCD_POSTS_CLOUD_PROVIDER extends WPCD_Posts_Base {
 		// get all defined virtual providers.
 		$posts = get_posts(
 			array(
-				'post_type'   => 'wpcd_cloud_provider',
-				'post_status' => 'publish',
-				'numberposts' => -1,
+				'post_type'              => 'wpcd_cloud_provider',
+				'post_status'            => 'publish',
+				'numberposts'            => -1,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
 			)
 		);
 
